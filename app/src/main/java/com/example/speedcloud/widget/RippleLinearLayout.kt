@@ -5,12 +5,12 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.example.speedcloud.R
 import java.util.*
 
+// 背景带波纹的LinearLayout
 class RippleLinearLayout : LinearLayout {
     private var mContext: Context
     private var timer: Timer // 定时器
