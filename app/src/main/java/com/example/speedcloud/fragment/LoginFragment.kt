@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.speedcloud.MainActivity
+import com.example.speedcloud.MainApplication
 import com.example.speedcloud.R
 import com.example.speedcloud.bean.Result
 import com.example.speedcloud.bean.User
@@ -86,7 +87,7 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
 
             // 根据返回结果处理信息
             if (r.success) {
-                val user = Gson().fromJson(r.msg, User::class.java)
+                MainApplication.getInstance().user = Gson().fromJson(r.msg, User::class.java)
                 startMainActivity()
             } else {
                 showMessage(r.msg)

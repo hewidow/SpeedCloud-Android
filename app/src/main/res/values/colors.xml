@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="edittext_normal">#FFBDBDBD</color>
     <color name="edittext_focus">#FF2196F3</color>
+    <color name="ripple">#90CAF9</color>
+    <color name="ripple2">#FFFFFF</color>
 </resources>
