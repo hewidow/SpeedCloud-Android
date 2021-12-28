@@ -1,14 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.MeFragment">
 
-    <TextView
-        android:id="@+id/tv_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="me" />
+        android:background="@color/background_main"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:id="@+id/imageFilterView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@color/blue_500"
+                android:padding="6dp"
+                android:tint="#FFFFFF"
+                app:roundPercent="1"
+                app:srcCompat="@drawable/ic_baseline_person_24" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="username"
+                android:textColor="@color/text_main"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:elevation="10dp"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="10dp"
+            app:contentPadding="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="存储空间"
+                    android:textColor="@color/text_main" />
+
+                <ProgressBar
+                    android:id="@+id/pb_storage"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:maxHeight="6dp"
+                    android:minHeight="6dp"
+                    android:progress="40"
+                    android:progressDrawable="@drawable/progress_scale" />
+
+                <TextView
+                    android:id="@+id/tv_storage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1GB / 10GB"
+                    android:textColor="@color/text_main" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="退出" />
+
+    </LinearLayout>
 
 </FrameLayout>

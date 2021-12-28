@@ -2,8 +2,6 @@ package com.example.speedcloud.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +9,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.speedcloud.MainActivity
 import com.example.speedcloud.MainApplication
@@ -43,15 +42,16 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
         button.setOnClickListener { clickButton() }
 
         // 获取共享参数中的信息
-        val username = SharedUtil.readString("username","")
-        val password = SharedUtil.readString("password","")
-        val check = SharedUtil.readBoolean("autoLogin",false)
+        val username = SharedUtil.readString("username", "")
+        val password = SharedUtil.readString("password", "")
+        val check = SharedUtil.readBoolean("autoLogin", false)
 
+        root.findViewById<TextView>(R.id.username).text = username
+        root.findViewById<TextView>(R.id.password).text = password
+        root.findViewById<CheckBox>(R.id.autoLogin).isChecked = check
+        
         // 勾选自动登录且用户名和密码不为空，就自动登录
-        if (check&&!username.isNullOrEmpty()&&!password.isNullOrEmpty()) {
-            root.findViewById<TextView>(R.id.username).text = username
-            root.findViewById<TextView>(R.id.password).text = password
-            root.findViewById<CheckBox>(R.id.autoLogin).isChecked = check
+        if (check && !username.isNullOrEmpty() && !password.isNullOrEmpty()) {
             clickButton()
         }
 
@@ -74,9 +74,18 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
             // 请求开始，禁用按钮
             button.isEnabled = false
             // 将用户名和密码存入共享内存
-            SharedUtil.writeString("username",root.findViewById<TextView>(R.id.username).text.toString())
-            SharedUtil.writeString("password",root.findViewById<TextView>(R.id.password).text.toString())
-            SharedUtil.writeBoolean("autoLogin",root.findViewById<CheckBox>(R.id.autoLogin).isChecked)
+            SharedUtil.writeString(
+                "username",
+                root.findViewById<TextView>(R.id.username).text.toString()
+            )
+            SharedUtil.writeString(
+                "password",
+                root.findViewById<TextView>(R.id.password).text.toString()
+            )
+            SharedUtil.writeBoolean(
+                "autoLogin",
+                root.findViewById<CheckBox>(R.id.autoLogin).isChecked
+            )
             // 网络请求在IO线程完成
             val r = withContext(Dispatchers.IO) {
                 login(
@@ -114,14 +123,17 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
             )
         )
     }
+
     /**
      * 跳转到主界面
      */
     private fun startMainActivity() {
         startActivity(Intent(this.activity, MainActivity::class.java))
     }
+
     companion object {
         private const val TAG: String = "Login"
+
         @JvmStatic
         fun newInstance() =
             LoginFragment().apply {

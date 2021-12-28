@@ -1,13 +1,13 @@
 package com.example.speedcloud.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.speedcloud.R
 import com.example.speedcloud.util.HttpUtil
@@ -84,11 +84,14 @@ class ForgetFragment : Fragment() {
         }
         return root
     }
+
     private fun showMessage(msg: String) {
         Toast.makeText(this.activity, msg, Toast.LENGTH_SHORT).show()
     }
+
     companion object {
         const val TYPE_FORGET = 1 // 0代表注册，1代表忘记密码
+
         @JvmStatic
         fun newInstance() =
             ForgetFragment().apply {

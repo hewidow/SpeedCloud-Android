@@ -11,4 +11,6 @@
     <color name="edittext_focus">#FF2196F3</color>
     <color name="ripple">#90CAF9</color>
     <color name="ripple2">#FFFFFF</color>
+    <color name="background_main">#FAFAFA</color>
+    <color name="text_main">#000000</color>
 </resources>

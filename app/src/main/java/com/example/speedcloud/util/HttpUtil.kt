@@ -15,6 +15,7 @@ object HttpUtil {
         val msg: String,
         val data: Any
     )
+
     private var baseUrl = MainApplication.getInstance().getString(R.string.baseUrl) // 根地址
 
     /**
@@ -32,19 +33,22 @@ object HttpUtil {
             conn = URL(url).openConnection() as HttpURLConnection
             // 设置参数
             conn.requestMethod = requestMethod
-            conn.doOutput = true
+            conn.doOutput = requestMethod == "POST"
             conn.doInput = true
             conn.useCaches = false
             conn.setRequestProperty("Connection", "Keep-Alive")
-            conn.setRequestProperty("Content-Type","application/json; charset=UTF-8")
-            conn.setRequestProperty("accept","application/json")
-            conn.setRequestProperty("Content-Length",bt.size.toString())
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+            conn.setRequestProperty("accept", "application/json")
+            conn.setRequestProperty("Content-Length", bt.size.toString())
+            conn.setRequestProperty("token", MainApplication.getInstance().user?.token ?: "")
 
             // 请求体
-            val out: OutputStream = conn.outputStream
-            out.write(bt)
-            out.flush()
-            out.close()
+            if (requestMethod == "POST") {
+                val out: OutputStream = conn.outputStream
+                out.write(bt)
+                out.flush()
+                out.close()
+            }
 
             // 响应体
             val inputStream: InputStream = if (conn.responseCode == HttpURLConnection.HTTP_OK) {
