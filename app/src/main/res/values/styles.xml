@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="toolbar">
+        <item name="colorControlNormal">@color/main_icon</item>
+    </style>
 </resources>
