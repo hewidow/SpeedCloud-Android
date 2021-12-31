@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="filename"
-            android:textColor="@color/main_text" />
+            android:textColor="@color/main_text"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/nodeInfo"
@@ -33,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="TextView"
-            android:textColor="@color/secondary_text" />
+            android:textColor="@color/secondary_text"
+            android:textSize="13sp" />
     </LinearLayout>
 
     <Button

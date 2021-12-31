@@ -1,10 +1,8 @@
 package com.example.speedcloud.bean
 
-import java.util.*
-
 data class Node(
-    val createTime: Date,
-    val deleteTime: Date?,
+    val createTime: String,
+    val deleteTime: String?,
     val fileId: Int,
     val fileSize: Long,
     val isDirectory: Boolean,

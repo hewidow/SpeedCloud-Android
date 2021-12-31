@@ -15,6 +15,7 @@ import com.example.speedcloud.MainApplication
 import com.example.speedcloud.R
 import com.example.speedcloud.bean.User
 import com.example.speedcloud.bean.UserDetail
+import com.example.speedcloud.util.FileUtil
 import com.example.speedcloud.util.HttpUtil
 import com.example.speedcloud.util.SharedUtil
 import com.google.gson.Gson
@@ -62,23 +63,11 @@ class MeFragment : Fragment() {
     }
 
     /**
-     * 将字节大小转换为文本
-     */
-    private fun formatSize(size: Long): String {
-        var s = size
-        for (i in 0..sizeText.size - 2) {
-            if (s < 1024) return "$s${sizeText[i]}"
-            s /= 1024
-        }
-        return "$s${sizeText[sizeText.size - 1]}"
-    }
-
-    /**
      * 获取存储空间文本
      */
     private fun getStorageText(): String {
-        return "${formatSize(user.userDetail.totalSize - user.userDetail.availableSize)} / ${
-            formatSize(
+        return "${FileUtil.formatSize(user.userDetail.totalSize - user.userDetail.availableSize)} / ${
+            FileUtil.formatSize(
                 user.userDetail.totalSize
             )
         }"
@@ -114,8 +103,6 @@ class MeFragment : Fragment() {
     }
 
     companion object {
-        val sizeText = arrayOf("B", "KB", "MB", "GB")
-
         @JvmStatic
         fun newInstance() =
             MeFragment().apply {

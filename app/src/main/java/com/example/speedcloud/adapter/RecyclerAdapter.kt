@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.R
 import com.example.speedcloud.bean.Node
+import com.example.speedcloud.util.FileUtil
 
 class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
@@ -33,7 +34,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.nodeName.text = nodes[position].nodeName
         var subTitle = "${nodes[position].createTime}"
-        if (!nodes[position].isDirectory) subTitle += " ${nodes[position].fileSize}"
+        if (!nodes[position].isDirectory) subTitle += "  ${FileUtil.formatSize(nodes[position].fileSize)}"
         viewHolder.nodeInfo.text = subTitle
     }
 

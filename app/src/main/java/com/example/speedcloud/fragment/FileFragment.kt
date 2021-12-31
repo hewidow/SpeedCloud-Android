@@ -19,7 +19,7 @@ import com.example.speedcloud.adapter.RecyclerAdapter
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.util.HttpUtil
 import com.google.android.material.appbar.AppBarLayout
-import com.google.gson.GsonBuilder
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -93,10 +93,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
                 HttpUtil.get("queryChildren?nodeId=${nodeId}")
             }
             if (r.success) {
-                val gson =
-                    GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create() // 设置接收的时间格式
                 nodes.addAll(
-                    gson.fromJson(
+                    Gson().fromJson(
                         r.msg,
                         Array<Node>::class.java
                     ) // 转为文件数组
