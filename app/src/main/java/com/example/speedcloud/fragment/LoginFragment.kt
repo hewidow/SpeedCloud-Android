@@ -114,7 +114,7 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
      */
     private fun login(username: String, password: String): Result {
         return HttpUtil.post(
-            "/login",
+            "login",
             Gson().toJson(
                 mapOf(
                     "username" to username,

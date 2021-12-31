@@ -27,7 +27,7 @@
             app:title="传输列表" />
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tl_tab"
+            android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="64dp"
@@ -52,7 +52,7 @@
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp_page"
+            android:id="@+id/viewPage"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

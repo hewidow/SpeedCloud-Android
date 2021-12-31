@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         mContext = this
 
         // 设置ViewPage2的适配器
-        binding.vpPage.adapter = object : FragmentStateAdapter(this) {
+        binding.viewPage.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
                 return 2
             }
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // 使用TabLayoutMediator将TabLayout和ViewPage2进行双向绑定
-        TabLayoutMediator(binding.tlTab, binding.vpPage) { tab, position ->
+        TabLayoutMediator(binding.tabLayout, binding.viewPage) { tab, position ->
             when (position) {
                 0 -> {
                     tab.text = "文件"

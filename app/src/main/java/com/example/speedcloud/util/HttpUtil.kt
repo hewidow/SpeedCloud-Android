@@ -37,13 +37,13 @@ object HttpUtil {
             conn.doInput = true
             conn.useCaches = false
             conn.setRequestProperty("Connection", "Keep-Alive")
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
             conn.setRequestProperty("accept", "application/json")
-            conn.setRequestProperty("Content-Length", bt.size.toString())
             conn.setRequestProperty("token", MainApplication.getInstance().user?.token ?: "")
 
-            // 请求体
+            // 设置POST的请求头和请求体
             if (requestMethod == "POST") {
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+                conn.setRequestProperty("Content-Length", bt.size.toString())
                 val out: OutputStream = conn.outputStream
                 out.write(bt)
                 out.flush()
@@ -82,8 +82,8 @@ object HttpUtil {
         return Result(false, "未知错误")
     }
 
-    fun get(path: String, data: String): Result {
-        return request("GET", path, data)
+    fun get(path: String): Result {
+        return request("GET", path, "")
     }
 
     fun post(path: String, data: String): Result {

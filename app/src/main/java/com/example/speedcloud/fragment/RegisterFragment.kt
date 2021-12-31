@@ -41,7 +41,7 @@ class RegisterFragment : Fragment() {
                 sendCode.isEnabled = false
                 val r = withContext(Dispatchers.IO) {
                     HttpUtil.post(
-                        "/checkCode",
+                        "checkCode",
                         Gson().toJson(
                             mapOf(
                                 "email" to root.findViewById<TextView>(R.id.email).text.toString(),
@@ -63,7 +63,7 @@ class RegisterFragment : Fragment() {
                 register.isEnabled = false
                 val r = withContext(Dispatchers.IO) {
                     HttpUtil.post(
-                        "/register",
+                        "register",
                         Gson().toJson(
                             mapOf(
                                 "email" to root.findViewById<TextView>(R.id.email).text.toString(),

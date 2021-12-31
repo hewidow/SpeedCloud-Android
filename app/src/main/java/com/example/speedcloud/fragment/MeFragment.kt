@@ -13,8 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import com.example.speedcloud.AccountActivity
 import com.example.speedcloud.MainApplication
 import com.example.speedcloud.R
+import com.example.speedcloud.bean.User
+import com.example.speedcloud.bean.UserDetail
 import com.example.speedcloud.util.HttpUtil
 import com.example.speedcloud.util.SharedUtil
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,7 +25,7 @@ import kotlinx.coroutines.withContext
 class MeFragment : Fragment() {
 
     private lateinit var root: View
-    private var user = MainApplication.getInstance().user!!
+    private lateinit var user: User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,23 +37,28 @@ class MeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         root = inflater.inflate(R.layout.fragment_me, container, false)
-        root.findViewById<TextView>(R.id.tv_name).text = user.userDetail.username
-        root.findViewById<ProgressBar>(R.id.pb_storage).progress =
-            ((user.userDetail.totalSize - user.userDetail.availableSize) * 100F / user.userDetail.totalSize).toInt()
-        root.findViewById<TextView>(R.id.tv_storage).text = getStorageText()
         root.findViewById<Button>(R.id.logout).setOnClickListener {
             lifecycleScope.launch {
                 SharedUtil.writeBoolean("autoLogin", false)
                 val r = withContext(Dispatchers.IO) {
-                    HttpUtil.get(
-                        "/logout",
-                        ""
-                    )
+                    HttpUtil.get("/logout")
                 }
                 startAccountActivity()
             }
         }
+        initView()
         return root
+    }
+
+    /**
+     * 将数据装载进界面
+     */
+    private fun initView() {
+        user = MainApplication.getInstance().user!!
+        root.findViewById<TextView>(R.id.username).text = user.userDetail.username
+        root.findViewById<ProgressBar>(R.id.pb_storage).progress =
+            ((user.userDetail.totalSize - user.userDetail.availableSize) * 100F / user.userDetail.totalSize).toInt()
+        root.findViewById<TextView>(R.id.tv_storage).text = getStorageText()
     }
 
     /**
@@ -86,6 +94,23 @@ class MeFragment : Fragment() {
                 AccountActivity::class.java
             ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         )
+    }
+
+    /**
+     * 切换到此fragment就查询用户的存储空间信息并更新到界面
+     */
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            val r = withContext(Dispatchers.IO) {
+                HttpUtil.get("me")
+            }
+            if (r.success) {
+                MainApplication.getInstance().user?.userDetail =
+                    Gson().fromJson(r.msg, UserDetail::class.java)
+                initView()
+            }
+        }
     }
 
     companion object {

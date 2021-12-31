@@ -40,7 +40,7 @@ class AccountActivity : AppCompatActivity() {
         setFragment(FragmentType.LOGIN)
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.blue_500) // 设置状态栏颜色
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE // 设置白色字体
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE // 设置暗色字体
     }
 
     /**
@@ -57,7 +57,7 @@ class AccountActivity : AppCompatActivity() {
         }
         if (iFragment[type.ordinal] == null) { // 未创建实例，则创建并添加
             iFragment[type.ordinal] = cFragment[type.ordinal]()
-            mTransaction.add(R.id.fl_main, iFragment[type.ordinal]!!)
+            mTransaction.add(R.id.frameLayout, iFragment[type.ordinal]!!)
         } else { // 已创建则显示
             mTransaction.show(iFragment[type.ordinal]!!)
         }
