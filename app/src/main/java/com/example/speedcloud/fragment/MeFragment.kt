@@ -80,7 +80,12 @@ class MeFragment : Fragment() {
      * 跳转到登录界面
      */
     private fun startAccountActivity() {
-        startActivity(Intent(this.activity, AccountActivity::class.java))
+        startActivity(
+            Intent(
+                this.activity,
+                AccountActivity::class.java
+            ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
     }
 
     companion object {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,6 +17,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/edittext_selector"
             android:drawableStart="@drawable/ic_baseline_alternate_email_24"
+            android:drawablePadding="6dp"
             android:hint="邮箱"
             android:inputType="textEmailAddress" />
 
@@ -32,6 +32,7 @@
                 android:layout_height="48dp"
                 android:background="@drawable/edittext_selector"
                 android:drawableStart="@drawable/ic_baseline_verified_user_24"
+                android:drawablePadding="6dp"
                 android:hint="验证码"
                 android:inputType="number" />
 
@@ -51,6 +52,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/edittext_selector"
             android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawablePadding="6dp"
             android:hint="新密码"
             android:inputType="textPassword" />
 

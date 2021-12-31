@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
@@ -16,6 +17,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/edittext_selector"
             android:drawableStart="@drawable/ic_baseline_person_24"
+            android:drawablePadding="6dp"
             android:hint="昵称"
             android:inputType="textEmailAddress" />
 
@@ -26,6 +28,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/edittext_selector"
             android:drawableStart="@drawable/ic_baseline_alternate_email_24"
+            android:drawablePadding="6dp"
             android:hint="邮箱"
             android:inputType="textEmailAddress" />
 
@@ -40,6 +43,7 @@
                 android:layout_height="48dp"
                 android:background="@drawable/edittext_selector"
                 android:drawableStart="@drawable/ic_baseline_verified_user_24"
+                android:drawablePadding="6dp"
                 android:hint="验证码"
                 android:inputType="number" />
 
@@ -59,6 +63,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/edittext_selector"
             android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawablePadding="6dp"
             android:hint="密码"
             android:inputType="textPassword" />
 

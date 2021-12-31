@@ -1,24 +1,28 @@
 package com.example.speedcloud
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.speedcloud.databinding.ActivityMainBinding
-import com.example.speedcloud.fragment.FileFragment
-import com.example.speedcloud.fragment.MeFragment
+import com.example.speedcloud.databinding.ActivitySwapBinding
+import com.example.speedcloud.fragment.DownloadFragment
+import com.example.speedcloud.fragment.UploadFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class SwapActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySwapBinding
     private lateinit var mContext: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivitySwapBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         mContext = this
+        binding.toolbar.setNavigationOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
 
         // 设置ViewPage2的适配器
         binding.vpPage.adapter = object : FragmentStateAdapter(this) {
@@ -28,8 +32,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun createFragment(position: Int): Fragment {
                 return when (position) {
-                    0 -> FileFragment.newInstance()
-                    else -> MeFragment.newInstance()
+                    0 -> DownloadFragment.newInstance()
+                    else -> UploadFragment.newInstance()
                 }
             }
         }
@@ -38,12 +42,10 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tlTab, binding.vpPage) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.text = "文件"
-                    tab.icon = ContextCompat.getDrawable(mContext, R.drawable.tab_selector_file)
+                    tab.text = "下载"
                 }
                 else -> {
-                    tab.text = "我的"
-                    tab.icon = ContextCompat.getDrawable(mContext, R.drawable.tab_selector_me)
+                    tab.text = "上传"
                 }
             }
         }.attach()

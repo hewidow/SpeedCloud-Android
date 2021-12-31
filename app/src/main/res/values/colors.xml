@@ -11,8 +11,10 @@
     <color name="edittext_focus">#2196F3</color>
     <color name="ripple">#90CAF9</color>
     <color name="ripple2">#FFFFFF</color>
+    <color name="statusBar">#FAFAFA</color>
     <color name="main_background">#FAFAFA</color>
     <color name="secondary_background">#EEEEEE</color>
-    <color name="main_text">#000000</color>
+    <color name="main_text">#424242</color>
+    <color name="secondary_text">#9E9E9E</color>
     <color name="main_icon">#424242</color>
 </resources>

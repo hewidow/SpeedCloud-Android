@@ -1,8 +1,9 @@
 package com.example.speedcloud
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.speedcloud.databinding.ActivityAccountBinding
 import com.example.speedcloud.fragment.ForgetFragment
@@ -15,9 +16,10 @@ class AccountActivity : AppCompatActivity() {
             LOGIN, REGISTER, FORGET
         } // 定义Fragment的枚举类
     }
+
     private lateinit var binding: ActivityAccountBinding
     private lateinit var iFragment: Array<Fragment?> // Fragment实例
-    private lateinit var cFragment: Array<()->Fragment> //newInstance的函数引用
+    private lateinit var cFragment: Array<() -> Fragment> //newInstance的函数引用
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,8 +32,15 @@ class AccountActivity : AppCompatActivity() {
         binding.tvForget.setOnClickListener { setFragment(FragmentType.FORGET) }
 
         iFragment = Array(FragmentType.values().size) { null } // 初始化为null
-        cFragment = arrayOf(LoginFragment::newInstance, RegisterFragment::newInstance, ForgetFragment::newInstance)
+        cFragment = arrayOf(
+            LoginFragment::newInstance,
+            RegisterFragment::newInstance,
+            ForgetFragment::newInstance
+        )
         setFragment(FragmentType.LOGIN)
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.blue_500) // 设置状态栏颜色
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE // 设置白色字体
     }
 
     /**
@@ -62,7 +71,7 @@ class AccountActivity : AppCompatActivity() {
         binding.tvLogin.visibility = View.VISIBLE
         binding.tvRegister.visibility = View.VISIBLE
         binding.tvForget.visibility = View.VISIBLE
-        when(type) {
+        when (type) {
             FragmentType.LOGIN -> binding.tvLogin.visibility = View.GONE
             FragmentType.REGISTER -> binding.tvRegister.visibility = View.GONE
             else -> binding.tvForget.visibility = View.GONE

@@ -49,7 +49,7 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
         root.findViewById<TextView>(R.id.username).text = username
         root.findViewById<TextView>(R.id.password).text = password
         root.findViewById<CheckBox>(R.id.autoLogin).isChecked = check
-        
+
         // 勾选自动登录且用户名和密码不为空，就自动登录
         if (check && !username.isNullOrEmpty() && !password.isNullOrEmpty()) {
             clickButton()
@@ -128,7 +128,12 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
      * 跳转到主界面
      */
     private fun startMainActivity() {
-        startActivity(Intent(this.activity, MainActivity::class.java))
+        startActivity(
+            Intent(
+                this.activity,
+                MainActivity::class.java
+            ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
     }
 
     companion object {

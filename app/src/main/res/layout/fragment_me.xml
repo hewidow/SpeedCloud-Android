@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             app:cardCornerRadius="6dp"
+            app:cardElevation="1dp"
             app:cardUseCompatPadding="true"
             app:contentPadding="6dp">
 
@@ -65,8 +66,8 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
                     android:maxHeight="6dp"
                     android:minHeight="6dp"
                     android:progress="40"
