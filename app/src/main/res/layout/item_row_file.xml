@@ -4,7 +4,8 @@
     android:id="@+id/rowItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="6dp">
 
     <ImageView
         android:id="@+id/icon"
@@ -38,10 +39,26 @@
             android:textSize="13sp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/nodeSelect"
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <View
+            android:id="@+id/checkBoxIn"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/checkbox_unchecked" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/checkbox_selector"
+            android:button="@null"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </LinearLayout>

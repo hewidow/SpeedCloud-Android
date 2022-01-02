@@ -40,6 +40,7 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     private lateinit var adapter: RecyclerAdapter
     private lateinit var backStack: ArrayList<Node>
     private lateinit var backArrowDrawable: Drawable
+    private var selectStatus: Boolean = false// 是否处于选择文件模式
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -112,6 +113,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
 
     inner class MyOnItemLongClickListener : RecyclerListener.OnItemLongClickListener {
         override fun onItemLongClick(view: View, position: Int) {
+            selectStatus = true
+            adapter.startSelect()
         }
     }
 
@@ -168,9 +171,14 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
 
     /**
      * 返回能否回退上一层，能就直接回退上一层
-     * @return true为可以回退，false为根目录，无法回退
+     * @return true为可以回退，false为根目录，无法回退，即即将退出应用
      */
     fun back(): Boolean {
+        if (selectStatus) {
+            selectStatus = false
+            adapter.cancelSelect()
+            return true
+        } // 处于select模式
         if (backStack.size <= 1) return false
         backStack.removeLast()
         fetchChildren(backStack.last())

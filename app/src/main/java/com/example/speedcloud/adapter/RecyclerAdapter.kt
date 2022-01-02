@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,13 +20,17 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
 
     var mOnItemClickListener: RecyclerListener.OnItemClickListener? = null
     var mOnItemLongClickListener: RecyclerListener.OnItemLongClickListener? = null
+    private var selectStatus: Boolean = false
+    private var checkStatus: Array<Boolean> = Array(nodes.size) { false }
 
     // 根据布局绑定控件
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nodeName: TextView = view.findViewById(R.id.nodeName)
         val nodeInfo: TextView = view.findViewById(R.id.nodeInfo)
         val rowItem: LinearLayout = view.findViewById(R.id.rowItem)
         val icon: ImageView = view.findViewById(R.id.icon)
+        val checkBoxIn: View = view.findViewById(R.id.checkBoxIn)
+        val checkBox: CheckBox = view.findViewById(R.id.checkBox)
     }
 
     /**
@@ -68,17 +73,46 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
                 )
             )
         } // 为不同类型的文件设置相应的图标和颜色
+        // 设置文件名字和附属信息
         viewHolder.nodeName.text = nodes[position].nodeName
         var subTitle = nodes[position].createTime
         if (!nodes[position].isDirectory) subTitle += "  ${FileUtil.formatSize(nodes[position].fileSize)}"
         viewHolder.nodeInfo.text = subTitle
-        viewHolder.rowItem.setOnClickListener {
-            mOnItemClickListener?.onItemClick(it, position)
+
+        // 根据是否进入选择文件模式绑定相应的监听事件
+        if (selectStatus) {
+            viewHolder.rowItem.setOnClickListener {
+                viewHolder.checkBox.performClick()
+            }
+            viewHolder.rowItem.setOnLongClickListener(null)
+            viewHolder.checkBoxIn.visibility = View.GONE
+            viewHolder.checkBox.visibility = View.VISIBLE
+        } else {
+            // 设置item点击监听
+            viewHolder.rowItem.setOnClickListener {
+                mOnItemClickListener?.onItemClick(it, position)
+            }
+            // 设置item长按监听
+            viewHolder.rowItem.setOnLongClickListener {
+                checkStatus[position] = true // 长按的那一项设置为true
+                mOnItemLongClickListener?.onItemLongClick(it, position)
+                true
+            }
+            viewHolder.checkBoxIn.visibility = View.VISIBLE
+            viewHolder.checkBox.visibility = View.GONE
         }
-        viewHolder.rowItem.setOnLongClickListener {
+
+        // 设置checkBoxIn的勾选监听，效果和长按item项一样
+        viewHolder.checkBoxIn.setOnClickListener {
+            checkStatus[position] = true // 点击的那一项设置为true
             mOnItemLongClickListener?.onItemLongClick(it, position)
-            true
         }
+        // 设置checkBox勾选监听
+        viewHolder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            checkStatus[position] = isChecked
+        }
+        // 因为是recyclerView，所以需要根据保存的勾选状态设置checkBox
+        viewHolder.checkBox.isChecked = checkStatus[position]
     }
 
     override fun getItemCount() = nodes.size
@@ -89,6 +123,26 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(items: ArrayList<Node>) {
         nodes = items
+        checkStatus = Array(nodes.size) { false }
         notifyDataSetChanged() // 通知数据刷新了
+    }
+
+    /**
+     * 变为操作文件状态
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    fun startSelect() {
+        selectStatus = true
+        notifyDataSetChanged()
+    }
+
+    /**
+     * 取消操作文件状态
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    fun cancelSelect() {
+        checkStatus.fill(false) // 重置checkStatus状态
+        selectStatus = false
+        notifyDataSetChanged()
     }
 }

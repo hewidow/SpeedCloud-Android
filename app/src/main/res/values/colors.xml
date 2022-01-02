@@ -17,6 +17,7 @@
     <color name="main_text">#424242</color>
     <color name="secondary_text">#9E9E9E</color>
     <color name="main_icon">#424242</color>
+    <color name="secondary_icon">#BDBDBD</color>
     <color name="icon_folder">#FFC107</color>
     <color name="icon_file">#676767</color>
 </resources>
