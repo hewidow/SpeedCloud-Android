@@ -14,11 +14,14 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mContext: Context
+    private lateinit var iFragment: Array<Fragment>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mContext = this
+        iFragment = arrayOf(FileFragment.newInstance(), MeFragment.newInstance())
 
         // 设置ViewPage2的适配器
         binding.viewPage.adapter = object : FragmentStateAdapter(this) {
@@ -27,10 +30,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun createFragment(position: Int): Fragment {
-                return when (position) {
-                    0 -> FileFragment.newInstance()
-                    else -> MeFragment.newInstance()
-                }
+                return iFragment[position]
             }
         }
 
@@ -47,5 +47,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }.attach()
+    }
+
+    override fun onBackPressed() {
+        if (binding.tabLayout.selectedTabPosition != 0 || !(iFragment[0] as FileFragment).back()) super.onBackPressed()
     }
 }

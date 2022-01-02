@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rowItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/icon"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:tint="#FFC107"
         app:srcCompat="@drawable/ic_baseline_folder_24" />
 
     <LinearLayout
