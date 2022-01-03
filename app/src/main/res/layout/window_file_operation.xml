@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/blue_500"
+        android:gravity="center"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/download"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="下载"
+            android:backgroundTint="@color/button_background_color_selector"
+            android:textColor="@color/button_text_color_selector"
+            app:iconTint="@color/button_text_color_selector"
+            app:icon="@drawable/ic_outline_cloud_download_24"
+            app:iconGravity="top"
+            app:iconPadding="0dp" />
+
+        <Button
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="@color/button_background_color_selector"
+            app:iconTint="@color/button_text_color_selector"
+            android:text="分享"
+            android:textColor="@color/button_text_color_selector"
+            app:icon="@drawable/ic_outline_share_24"
+            app:iconGravity="top"
+            app:iconPadding="0dp" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="删除"
+            android:backgroundTint="@color/button_background_color_selector"
+            android:textColor="@color/button_text_color_selector"
+            app:iconTint="@color/button_text_color_selector"
+            app:icon="@drawable/ic_outline_delete_24"
+            app:iconGravity="top"
+            app:iconPadding="0dp" />
+
+        <Button
+            android:id="@+id/rename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="重命名"
+            android:backgroundTint="@color/button_background_color_selector"
+            android:textColor="@color/button_text_color_selector"
+            app:iconTint="@color/button_text_color_selector"
+            app:icon="@drawable/ic_outline_edit_24"
+            app:iconGravity="top"
+            app:iconPadding="0dp" />
+
+        <Button
+            android:id="@+id/move"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="移动"
+            android:backgroundTint="@color/button_background_color_selector"
+            android:textColor="@color/button_text_color_selector"
+            app:iconTint="@color/button_text_color_selector"
+            app:icon="@drawable/ic_move"
+            app:iconGravity="top"
+            app:iconPadding="0dp" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

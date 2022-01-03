@@ -12,4 +12,9 @@ interface RecyclerListener {
     interface OnItemLongClickListener {
         fun onItemLongClick(view: View, position: Int)
     }
+
+    // 定义一个勾选列表项的点击监听器接口
+    interface OnCheckedChangeListener {
+        fun onCheckedChange(view: View, position: Int, isChecked: Boolean)
+    }
 }

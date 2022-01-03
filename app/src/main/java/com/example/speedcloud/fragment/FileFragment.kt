@@ -3,9 +3,12 @@ package com.example.speedcloud.fragment
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.PopupWindow
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -30,25 +33,29 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 
+
 class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
 
     private lateinit var root: View
     private lateinit var appbar: AppBarLayout
     private lateinit var toolbar: Toolbar
     private lateinit var recycler: RecyclerView
-    private lateinit var nodes: ArrayList<Node>
+    private var nodes: ArrayList<Node> = ArrayList() // 需要展示的文件
     private lateinit var adapter: RecyclerAdapter
-    private lateinit var backStack: ArrayList<Node>
+    private var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
     private lateinit var backArrowDrawable: Drawable
-    private var selectStatus: Boolean = false// 是否处于选择文件模式
+    private var selectStatus: Boolean = false // 是否处于编辑模式
+    private lateinit var fileOperationView: View
+    private lateinit var fileOperationWindow: PopupWindow
+    private lateinit var fileToolbarView: View
+    private lateinit var fileToolbarWindow: PopupWindow
+    private var selectedItem: ArrayList<Node> = ArrayList() // 选择的文件项
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
         backArrowDrawable =
             ContextCompat.getDrawable(this.context!!, R.drawable.ic_baseline_arrow_back_ios_24)!!
-        nodes = ArrayList()
-        backStack = ArrayList()
         // 加入开始的根目录id
         backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0))
     }
@@ -57,10 +64,57 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // 获取编辑模式的底部操作栏view对象
+        fileOperationView = inflater.inflate(R.layout.window_file_operation, container, false)
+        initFileOperator()
+
+        // 获取编辑模式的顶部操操作栏view对象
+        fileToolbarView = inflater.inflate(R.layout.window_file_toolbar, container, false)
+        initFileToolbar()
+
         root = inflater.inflate(R.layout.fragment_file, container, false)
         initToolBar()
         initRecycler()
         return root
+    }
+
+    /**
+     * 初始化编辑模式的顶部操作栏
+     */
+    private fun initFileToolbar() {
+        fileToolbarView.findViewById<Button>(R.id.cancel).setOnClickListener { back() }
+        fileToolbarView.findViewById<Button>(R.id.selectAll).setOnClickListener {
+            adapter.selectAllOrNot(true)
+            fileToolbarView.findViewById<Button>(R.id.selectAll).visibility = View.GONE
+            fileToolbarView.findViewById<Button>(R.id.unselectAll).visibility = View.VISIBLE
+        }
+        fileToolbarView.findViewById<Button>(R.id.unselectAll).setOnClickListener {
+            adapter.selectAllOrNot(false)
+            fileToolbarView.findViewById<Button>(R.id.unselectAll).visibility = View.GONE
+            fileToolbarView.findViewById<Button>(R.id.selectAll).visibility = View.VISIBLE
+        }
+        fileToolbarWindow = PopupWindow(
+            fileToolbarView,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            false
+        )
+        fileToolbarWindow.animationStyle = R.style.popup_window_top_bottom_anim
+    }
+
+    /**
+     * 初始化编辑模式的底部操作栏
+     */
+    private fun initFileOperator() {
+        // 设置窗口大小
+        fileOperationWindow = PopupWindow(
+            fileOperationView,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            false
+        )
+        // 设置动画效果
+        fileOperationWindow.animationStyle = R.style.popup_window_bottom_top_anim
     }
 
     /**
@@ -101,6 +155,9 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         toolbar.navigationIcon = null
     }
 
+    /**
+     * 实现点击列表项的事件
+     */
     inner class MyOnItemClickListener : RecyclerListener.OnItemClickListener {
         override fun onItemClick(view: View, position: Int) {
             if (nodes[position].isDirectory) { // 是文件夹
@@ -111,10 +168,32 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         }
     }
 
+    /**
+     * 实现长按列表项的事件
+     */
     inner class MyOnItemLongClickListener : RecyclerListener.OnItemLongClickListener {
         override fun onItemLongClick(view: View, position: Int) {
             selectStatus = true
+            fileOperationWindow.showAsDropDown(root)
+            fileToolbarWindow.showAtLocation(root, Gravity.START or Gravity.TOP, 0, 0)
             adapter.startSelect()
+        }
+    }
+
+    /**
+     * 实现点击勾选列表项的事件
+     * 注意：
+     * 此处为方便起见，直接通过adapter获取已选择的列表项，当notifyDataSetChanged时若有多个check改变状态改变会触发多次这个事件！！！
+     */
+    inner class MyOnCheckedChangeListener : RecyclerListener.OnCheckedChangeListener {
+        override fun onCheckedChange(view: View, position: Int, isChecked: Boolean) {
+            selectedItem = adapter.getSelectedItem()
+            fileOperationView.findViewById<Button>(R.id.download).isEnabled =
+                (selectedItem.size == 1)
+            fileOperationView.findViewById<Button>(R.id.share).isEnabled = (selectedItem.size > 0)
+            fileOperationView.findViewById<Button>(R.id.delete).isEnabled = (selectedItem.size > 0)
+            fileOperationView.findViewById<Button>(R.id.rename).isEnabled = (selectedItem.size == 1)
+            fileOperationView.findViewById<Button>(R.id.move).isEnabled = (selectedItem.size == 1)
         }
     }
 
@@ -131,6 +210,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         adapter.mOnItemClickListener = MyOnItemClickListener()
         // 设置长按监听器
         adapter.mOnItemLongClickListener = MyOnItemLongClickListener()
+        // 设置勾选监听器
+        adapter.mOnCheckedChangeListener = MyOnCheckedChangeListener()
         // 给recycler设置适配器
         recycler.adapter = adapter
         fetchChildren(backStack.last())
@@ -177,6 +258,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         if (selectStatus) {
             selectStatus = false
             adapter.cancelSelect()
+            fileOperationWindow.dismiss()
+            fileToolbarWindow.dismiss()
             return true
         } // 处于select模式
         if (backStack.size <= 1) return false

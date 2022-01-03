@@ -4,4 +4,14 @@
     <style name="toolbar">
         <item name="colorControlNormal">@color/main_icon</item>
     </style>
+
+    <style name="popup_window_bottom_top_anim">
+        <item name="android:windowEnterAnimation">@anim/popup_window_bottom_top_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/popup_window_bottom_top_exit_anim</item>
+    </style>
+
+    <style name="popup_window_top_bottom_anim">
+        <item name="android:windowEnterAnimation">@anim/popup_window_top_bottom_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/popup_window_top_bottom_exit_anim</item>
+    </style>
 </resources>

@@ -20,6 +20,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
 
     var mOnItemClickListener: RecyclerListener.OnItemClickListener? = null
     var mOnItemLongClickListener: RecyclerListener.OnItemLongClickListener? = null
+    var mOnCheckedChangeListener: RecyclerListener.OnCheckedChangeListener? = null
     private var selectStatus: Boolean = false
     private var checkStatus: Array<Boolean> = Array(nodes.size) { false }
 
@@ -79,7 +80,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
         if (!nodes[position].isDirectory) subTitle += "  ${FileUtil.formatSize(nodes[position].fileSize)}"
         viewHolder.nodeInfo.text = subTitle
 
-        // 根据是否进入选择文件模式绑定相应的监听事件
+        // 根据是否处于编辑模式绑定相应的监听事件
         if (selectStatus) {
             viewHolder.rowItem.setOnClickListener {
                 viewHolder.checkBox.performClick()
@@ -90,7 +91,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
         } else {
             // 设置item点击监听
             viewHolder.rowItem.setOnClickListener {
-                mOnItemClickListener?.onItemClick(it, position)
+                mOnItemClickListener?.onItemClick(it, position) // 监听事件回调
             }
             // 设置item长按监听
             viewHolder.rowItem.setOnLongClickListener {
@@ -108,8 +109,9 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
             mOnItemLongClickListener?.onItemLongClick(it, position)
         }
         // 设置checkBox勾选监听
-        viewHolder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+        viewHolder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             checkStatus[position] = isChecked
+            mOnCheckedChangeListener?.onCheckedChange(buttonView, position, isChecked)
         }
         // 因为是recyclerView，所以需要根据保存的勾选状态设置checkBox
         viewHolder.checkBox.isChecked = checkStatus[position]
@@ -144,5 +146,27 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
         checkStatus.fill(false) // 重置checkStatus状态
         selectStatus = false
         notifyDataSetChanged()
+    }
+
+    /**
+     * 全选或全不选
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    fun selectAllOrNot(check: Boolean) {
+        checkStatus.fill(check)
+        notifyDataSetChanged()
+    }
+
+    /**
+     * 获取勾选项
+     */
+    fun getSelectedItem(): ArrayList<Node> {
+        val selected: ArrayList<Node> = ArrayList()
+        for (i in checkStatus.indices) {
+            if (checkStatus[i]) {
+                selected.add(nodes[i])
+            }
+        }
+        return selected
     }
 }
