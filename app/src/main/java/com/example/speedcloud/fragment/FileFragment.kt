@@ -7,10 +7,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.PopupWindow
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
@@ -194,6 +191,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
             fileOperationView.findViewById<Button>(R.id.delete).isEnabled = (selectedItem.size > 0)
             fileOperationView.findViewById<Button>(R.id.rename).isEnabled = (selectedItem.size == 1)
             fileOperationView.findViewById<Button>(R.id.move).isEnabled = (selectedItem.size == 1)
+            fileToolbarView.findViewById<TextView>(R.id.selectNumber).text =
+                "已选中${selectedItem.size}个文件"
         }
     }
 
