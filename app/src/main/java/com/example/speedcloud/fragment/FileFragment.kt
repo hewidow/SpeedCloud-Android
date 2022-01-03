@@ -1,8 +1,13 @@
 package com.example.speedcloud.fragment
 
+import android.app.DownloadManager
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment.DIRECTORY_DOWNLOADS
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +20,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.speedcloud.MainApplication
 import com.example.speedcloud.R
 import com.example.speedcloud.SwapActivity
 import com.example.speedcloud.adapter.RecyclerAdapter
@@ -72,7 +79,23 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         root = inflater.inflate(R.layout.fragment_file, container, false)
         initToolBar()
         initRecycler()
+        initRefresh()
+
         return root
+    }
+
+    /**
+     * 初始化刷新
+     */
+    private fun initRefresh() {
+        // 设置刷新颜色
+        root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).setColorSchemeResources(
+            R.color.blue_500, R.color.blue_700
+        )
+        // 设置下拉刷新监听器
+        root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).setOnRefreshListener {
+            fetchChildren(backStack.last())
+        }
     }
 
     /**
@@ -99,10 +122,52 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         fileToolbarWindow.animationStyle = R.style.popup_window_top_bottom_anim
     }
 
+    private fun query(Id: Long, downloadManager: DownloadManager) {
+        val downloadQuery = DownloadManager.Query()
+        downloadQuery.setFilterById(Id)
+        val cursor: Cursor = downloadManager.query(downloadQuery)
+        if (cursor != null && cursor.moveToFirst()) {
+            // val fileName: Int = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME)
+            val fileUri: Int = cursor.getColumnIndex(DownloadManager.COLUMN_URI)
+            // val fn: String = cursor.getString(fileName)
+            val fu: String = cursor.getString(fileUri)
+            val totalSizeBytesIndex: Int =
+                cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
+            val bytesDownloadSoFarIndex: Int =
+                cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
+
+            // 下载的文件总大小
+            val totalSizeBytes: Int = cursor.getInt(totalSizeBytesIndex)
+
+            // 截止目前已经下载的文件总大小
+            val bytesDownloadSoFar: Int = cursor.getInt(bytesDownloadSoFarIndex)
+            Log.d(
+                "hgf",
+                "from $fu 下载到本地  文件总大小:$totalSizeBytes 已经下载:$bytesDownloadSoFar"
+            )
+            cursor.close()
+        }
+    }
+
     /**
      * 初始化编辑模式的底部操作栏
      */
     private fun initFileOperator() {
+        fileOperationView.findViewById<Button>(R.id.download).setOnClickListener {
+            val token = MainApplication.getInstance().user?.token
+            val request =
+                DownloadManager.Request(Uri.parse("${getString(R.string.baseUrl)}download?token=${token}&nodeId=${selectedItem[0].nodeId}&online=0"))
+            request.setDestinationInExternalPublicDir(
+                DIRECTORY_DOWNLOADS,
+                "${selectedItem[0].nodeName}"
+            )
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+            request.setTitle("正在下载...")
+            request.setDescription("SpeedCloud")
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+            val id = MainApplication.getInstance().downloadManager.enqueue(request)
+            Log.d("hgf", "download Id: ${id}")
+        }
         // 设置窗口大小
         fileOperationWindow = PopupWindow(
             fileOperationView,
@@ -229,7 +294,9 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
             } // 看是否是根目录设置是否有返回键
             nodes.clear() // 清空之前的文件
             adapter.setItems(nodes) // 设置数据
-            root.findViewById<ProgressBar>(R.id.loading).visibility = View.VISIBLE // 显示loading
+            if (!root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).isRefreshing) {
+                root.findViewById<ProgressBar>(R.id.loading).visibility = View.VISIBLE
+            } // 如果没有下拉刷新就显示loading
             val r = withContext(Dispatchers.IO) {
                 HttpUtil.get("queryChildren?nodeId=${node.nodeId}")
             }
@@ -244,6 +311,7 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
                 showMessage(r.msg)
             }
             nodes.sortByDescending { it.isDirectory }
+            root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).isRefreshing = false
             root.findViewById<ProgressBar>(R.id.loading).visibility = View.GONE // 移除loading
             adapter.setItems(nodes)
         }
