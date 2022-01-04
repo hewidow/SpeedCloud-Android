@@ -22,14 +22,13 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:enabled="false"
-            android:text="下载"
             android:backgroundTint="@color/button_background_color_selector"
+            android:text="下载"
             android:textColor="@color/button_text_color_selector"
-            app:iconTint="@color/button_text_color_selector"
             app:icon="@drawable/ic_outline_cloud_download_24"
             app:iconGravity="top"
-            app:iconPadding="0dp" />
+            app:iconPadding="0dp"
+            app:iconTint="@color/button_text_color_selector" />
 
         <Button
             android:id="@+id/share"

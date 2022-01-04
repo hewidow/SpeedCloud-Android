@@ -17,4 +17,8 @@ interface RecyclerListener {
     interface OnCheckedChangeListener {
         fun onCheckedChange(view: View, position: Int, isChecked: Boolean)
     }
+
+    interface OnSelectedItemNumberChangeListener {
+        fun onSelectedItemNumberChange(value: Int)
+    }
 }

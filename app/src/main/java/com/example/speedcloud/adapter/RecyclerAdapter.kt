@@ -1,6 +1,7 @@
 package com.example.speedcloud.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +22,19 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     var mOnItemClickListener: RecyclerListener.OnItemClickListener? = null
     var mOnItemLongClickListener: RecyclerListener.OnItemLongClickListener? = null
     var mOnCheckedChangeListener: RecyclerListener.OnCheckedChangeListener? = null
-    private var selectStatus: Boolean = false
-    private var checkStatus: Array<Boolean> = Array(nodes.size) { false }
+    var mOnSelectedItemNumberChangeListener: RecyclerListener.OnSelectedItemNumberChangeListener? =
+        null
+    var selectStatus: Boolean = false
+    var checkStatus: Array<Boolean> = Array(nodes.size) { false }
+    private var selectedItemNumber: Int = 0
+        set(value) {
+            field = value
+            mOnSelectedItemNumberChangeListener?.onSelectedItemNumberChange(value)
+        }
+    private lateinit var iconFolder: Drawable
+    private var iconFolderColor: Int = 0
+    private lateinit var iconFile: Drawable
+    private var iconFileColor: Int = 0
 
     // 根据布局绑定控件
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -40,6 +52,13 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(viewGroup.context).inflate(R.layout.item_row_file, viewGroup, false)
+        iconFolder =
+            ContextCompat.getDrawable(viewGroup.context, R.drawable.ic_baseline_folder_24)!!
+        iconFolderColor = ContextCompat.getColor(viewGroup.context, R.color.icon_folder)
+        iconFile = ContextCompat.getDrawable(
+            viewGroup.context,
+            R.drawable.ic_baseline_insert_drive_file_24
+        )!!
         return ViewHolder(view)
     }
 
@@ -47,33 +66,15 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
      * 将每一项数据绑定到界面上
      */
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        // 为不同类型的文件设置相应的图标和颜色
         if (nodes[position].isDirectory) {
-            viewHolder.icon.setImageDrawable(
-                ContextCompat.getDrawable(
-                    viewHolder.itemView.context,
-                    R.drawable.ic_baseline_folder_24
-                )
-            ) // 设置图标
-            viewHolder.icon.setColorFilter(
-                ContextCompat.getColor(
-                    viewHolder.itemView.context,
-                    R.color.icon_folder
-                )
-            ) // 设置颜色
+            viewHolder.icon.setImageDrawable(iconFolder) // 设置图标
+            viewHolder.icon.setColorFilter(iconFolderColor) // 设置颜色
         } else {
-            viewHolder.icon.setImageDrawable(
-                ContextCompat.getDrawable(
-                    viewHolder.itemView.context,
-                    R.drawable.ic_baseline_insert_drive_file_24
-                )
-            )
-            viewHolder.icon.setColorFilter(
-                ContextCompat.getColor(
-                    viewHolder.itemView.context,
-                    R.color.icon_file
-                )
-            )
-        } // 为不同类型的文件设置相应的图标和颜色
+            viewHolder.icon.setImageDrawable(iconFile)
+            viewHolder.icon.setColorFilter(iconFileColor)
+        }
+
         // 设置文件名字和附属信息
         viewHolder.nodeName.text = nodes[position].nodeName
         var subTitle = nodes[position].createTime
@@ -96,7 +97,9 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
             // 设置item长按监听
             viewHolder.rowItem.setOnLongClickListener {
                 checkStatus[position] = true // 长按的那一项设置为true
+                selectedItemNumber = 1
                 mOnItemLongClickListener?.onItemLongClick(it, position)
+                startSelect()
                 true
             }
             viewHolder.checkBoxIn.visibility = View.VISIBLE
@@ -105,16 +108,24 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
 
         // 设置checkBoxIn的勾选监听，效果和长按item项一样
         viewHolder.checkBoxIn.setOnClickListener {
-            checkStatus[position] = true // 点击的那一项设置为true
-            mOnItemLongClickListener?.onItemLongClick(it, position)
+            viewHolder.rowItem.performLongClick()
         }
+
+        // 先设置为null，防止设置勾选时触发监听
+        viewHolder.checkBox.setOnCheckedChangeListener(null)
+        // 因为是recyclerView，所以需要根据保存的勾选状态设置checkBox
+        viewHolder.checkBox.isChecked = checkStatus[position]
+        viewHolder.rowItem.isSelected = checkStatus[position]
+
         // 设置checkBox勾选监听
         viewHolder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             checkStatus[position] = isChecked
+            viewHolder.rowItem.isSelected = isChecked
+            if (isChecked) ++selectedItemNumber
+            else --selectedItemNumber
             mOnCheckedChangeListener?.onCheckedChange(buttonView, position, isChecked)
         }
-        // 因为是recyclerView，所以需要根据保存的勾选状态设置checkBox
-        viewHolder.checkBox.isChecked = checkStatus[position]
+
     }
 
     override fun getItemCount() = nodes.size
@@ -126,6 +137,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     fun setItems(items: ArrayList<Node>) {
         nodes = items
         checkStatus = Array(nodes.size) { false }
+        selectedItemNumber = 0
         notifyDataSetChanged() // 通知数据刷新了
     }
 
@@ -144,6 +156,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     @SuppressLint("NotifyDataSetChanged")
     fun cancelSelect() {
         checkStatus.fill(false) // 重置checkStatus状态
+        selectedItemNumber = 0
         selectStatus = false
         notifyDataSetChanged()
     }
@@ -154,19 +167,9 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     @SuppressLint("NotifyDataSetChanged")
     fun selectAllOrNot(check: Boolean) {
         checkStatus.fill(check)
+        selectedItemNumber = if (check) {
+            nodes.size
+        } else 0
         notifyDataSetChanged()
-    }
-
-    /**
-     * 获取勾选项
-     */
-    fun getSelectedItem(): ArrayList<Node> {
-        val selected: ArrayList<Node> = ArrayList()
-        for (i in checkStatus.indices) {
-            if (checkStatus[i]) {
-                selected.add(nodes[i])
-            }
-        }
-        return selected
     }
 }

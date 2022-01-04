@@ -16,14 +16,14 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mContext: Context
-    private lateinit var iFragment: Array<Fragment>
+    private lateinit var fileFragment: FileFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mContext = this
-        iFragment = arrayOf(FileFragment.newInstance(), MeFragment.newInstance())
+        fileFragment = FileFragment.newInstance()
 
         // 设置ViewPage2的适配器
         binding.viewPage.adapter = object : FragmentStateAdapter(this) {
@@ -32,9 +32,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun createFragment(position: Int): Fragment {
-                return iFragment[position]
+                return when (position) {
+                    0 -> fileFragment
+                    else -> MeFragment.newInstance()
+                }
             }
         }
+
+        // 禁止左右滑动
+        binding.viewPage.isUserInputEnabled = false
 
         // 使用TabLayoutMediator将TabLayout和ViewPage2进行双向绑定
         TabLayoutMediator(binding.tabLayout, binding.viewPage) { tab, position ->
@@ -50,12 +56,13 @@ class MainActivity : AppCompatActivity() {
             }
         }.attach()
 
+        // 动态请求存储权限
         ActivityCompat.requestPermissions(this, Array(1) {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         }, 1)
     }
 
     override fun onBackPressed() {
-        if (binding.tabLayout.selectedTabPosition != 0 || !(iFragment[0] as FileFragment).back()) super.onBackPressed()
+        if (binding.tabLayout.selectedTabPosition != 0 || !fileFragment.back()) super.onBackPressed()
     }
 }

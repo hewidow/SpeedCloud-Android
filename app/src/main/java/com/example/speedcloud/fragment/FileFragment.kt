@@ -2,7 +2,6 @@ package com.example.speedcloud.fragment
 
 import android.app.DownloadManager
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -40,20 +39,33 @@ import kotlin.math.abs
 
 class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
 
+
     private lateinit var root: View
     private lateinit var appbar: AppBarLayout
     private lateinit var toolbar: Toolbar
     private lateinit var recycler: RecyclerView
-    private var nodes: ArrayList<Node> = ArrayList() // 需要展示的文件
     private lateinit var adapter: RecyclerAdapter
-    private var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
     private lateinit var backArrowDrawable: Drawable
-    private var selectStatus: Boolean = false // 是否处于编辑模式
     private lateinit var fileOperationView: View
     private lateinit var fileOperationWindow: PopupWindow
     private lateinit var fileToolbarView: View
     private lateinit var fileToolbarWindow: PopupWindow
-    private var selectedItem: ArrayList<Node> = ArrayList() // 选择的文件项
+    private lateinit var nestedScrollView: NestedScrollView
+    private lateinit var loading: ProgressBar
+    private lateinit var selectNumber: TextView
+    private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var cancel: Button
+    private lateinit var selectAll: Button
+    private lateinit var unselectAll: Button
+    private lateinit var download: Button
+    private lateinit var share: Button
+    private lateinit var delete: Button
+    private lateinit var rename: Button
+    private lateinit var move: Button
+    private var nodes: ArrayList<Node> = ArrayList() // 需要展示的文件
+    private var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
+    private var selectedItem: ArrayList<Node> = ArrayList() // 选择的文件项下标
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -78,8 +90,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
 
         root = inflater.inflate(R.layout.fragment_file, container, false)
         initToolBar()
-        initRecycler()
         initRefresh()
+        initRecycler()
 
         return root
     }
@@ -88,12 +100,15 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
      * 初始化刷新
      */
     private fun initRefresh() {
+        loading = root.findViewById(R.id.loading)
+        swipeRefresh = root.findViewById(R.id.swipeRefresh)
+
         // 设置刷新颜色
-        root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).setColorSchemeResources(
+        swipeRefresh.setColorSchemeResources(
             R.color.blue_500, R.color.blue_700
         )
         // 设置下拉刷新监听器
-        root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).setOnRefreshListener {
+        swipeRefresh.setOnRefreshListener {
             fetchChildren(backStack.last())
         }
     }
@@ -102,16 +117,21 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
      * 初始化编辑模式的顶部操作栏
      */
     private fun initFileToolbar() {
-        fileToolbarView.findViewById<Button>(R.id.cancel).setOnClickListener { back() }
-        fileToolbarView.findViewById<Button>(R.id.selectAll).setOnClickListener {
+        cancel = fileToolbarView.findViewById(R.id.cancel)
+        selectAll = fileToolbarView.findViewById(R.id.selectAll)
+        unselectAll = fileToolbarView.findViewById(R.id.unselectAll)
+        selectNumber = fileToolbarView.findViewById(R.id.selectNumber)
+
+        cancel.setOnClickListener { back() }
+        selectAll.setOnClickListener {
             adapter.selectAllOrNot(true)
-            fileToolbarView.findViewById<Button>(R.id.selectAll).visibility = View.GONE
-            fileToolbarView.findViewById<Button>(R.id.unselectAll).visibility = View.VISIBLE
+            selectAll.visibility = View.GONE
+            unselectAll.visibility = View.VISIBLE
         }
-        fileToolbarView.findViewById<Button>(R.id.unselectAll).setOnClickListener {
+        unselectAll.setOnClickListener {
             adapter.selectAllOrNot(false)
-            fileToolbarView.findViewById<Button>(R.id.unselectAll).visibility = View.GONE
-            fileToolbarView.findViewById<Button>(R.id.selectAll).visibility = View.VISIBLE
+            unselectAll.visibility = View.GONE
+            selectAll.visibility = View.VISIBLE
         }
         fileToolbarWindow = PopupWindow(
             fileToolbarView,
@@ -122,38 +142,17 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         fileToolbarWindow.animationStyle = R.style.popup_window_top_bottom_anim
     }
 
-    private fun query(Id: Long, downloadManager: DownloadManager) {
-        val downloadQuery = DownloadManager.Query()
-        downloadQuery.setFilterById(Id)
-        val cursor: Cursor = downloadManager.query(downloadQuery)
-        if (cursor != null && cursor.moveToFirst()) {
-            // val fileName: Int = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME)
-            val fileUri: Int = cursor.getColumnIndex(DownloadManager.COLUMN_URI)
-            // val fn: String = cursor.getString(fileName)
-            val fu: String = cursor.getString(fileUri)
-            val totalSizeBytesIndex: Int =
-                cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
-            val bytesDownloadSoFarIndex: Int =
-                cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
-
-            // 下载的文件总大小
-            val totalSizeBytes: Int = cursor.getInt(totalSizeBytesIndex)
-
-            // 截止目前已经下载的文件总大小
-            val bytesDownloadSoFar: Int = cursor.getInt(bytesDownloadSoFarIndex)
-            Log.d(
-                "hgf",
-                "from $fu 下载到本地  文件总大小:$totalSizeBytes 已经下载:$bytesDownloadSoFar"
-            )
-            cursor.close()
-        }
-    }
-
     /**
      * 初始化编辑模式的底部操作栏
      */
     private fun initFileOperator() {
-        fileOperationView.findViewById<Button>(R.id.download).setOnClickListener {
+        download = fileOperationView.findViewById(R.id.download)
+        share = fileOperationView.findViewById(R.id.share)
+        delete = fileOperationView.findViewById(R.id.delete)
+        rename = fileOperationView.findViewById(R.id.rename)
+        move = fileOperationView.findViewById(R.id.move)
+        download.setOnClickListener {
+            getSelectedItem()
             val token = MainApplication.getInstance().user?.token
             val request =
                 DownloadManager.Request(Uri.parse("${getString(R.string.baseUrl)}download?token=${token}&nodeId=${selectedItem[0].nodeId}&online=0"))
@@ -180,6 +179,16 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     }
 
     /**
+     * 获取选中的列表项
+     */
+    private fun getSelectedItem() {
+        selectedItem.clear()
+        for (i in adapter.checkStatus.indices) {
+            if (adapter.checkStatus[i]) selectedItem.add(nodes[i])
+        }
+    }
+
+    /**
      * 折叠时显示搜索按钮，展开时隐藏搜索按钮
      */
     override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
@@ -196,6 +205,7 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     private fun initToolBar() {
         appbar = root.findViewById(R.id.appbar)
         toolbar = root.findViewById(R.id.toolbar)
+        nestedScrollView = root.findViewById(R.id.nestedScrollView)
 
         appbar.addOnOffsetChangedListener(this) // 监听appbar收缩程度
         toolbar.setOnMenuItemClickListener { item ->
@@ -204,8 +214,7 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
                     startActivity(Intent(this.activity, SwapActivity::class.java))
                 }
                 R.id.menu_search -> {
-                    root.findViewById<NestedScrollView>(R.id.nestedScrollView)
-                        .fullScroll(View.FOCUS_UP) //主体向上滚动
+                    nestedScrollView.fullScroll(View.FOCUS_UP) //主体向上滚动
                     appbar.setExpanded(true) //展开appbar
                 } // 回到顶部
             }
@@ -235,29 +244,32 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
      */
     inner class MyOnItemLongClickListener : RecyclerListener.OnItemLongClickListener {
         override fun onItemLongClick(view: View, position: Int) {
-            selectStatus = true
             fileOperationWindow.showAsDropDown(root)
             fileToolbarWindow.showAtLocation(root, Gravity.START or Gravity.TOP, 0, 0)
-            adapter.startSelect()
+            swipeRefresh.isEnabled = false
         }
     }
 
     /**
      * 实现点击勾选列表项的事件
-     * 注意：
-     * 此处为方便起见，直接通过adapter获取已选择的列表项，当notifyDataSetChanged时若有多个check改变状态改变会触发多次这个事件！！！
      */
     inner class MyOnCheckedChangeListener : RecyclerListener.OnCheckedChangeListener {
         override fun onCheckedChange(view: View, position: Int, isChecked: Boolean) {
-            selectedItem = adapter.getSelectedItem()
-            fileOperationView.findViewById<Button>(R.id.download).isEnabled =
-                (selectedItem.size == 1)
-            fileOperationView.findViewById<Button>(R.id.share).isEnabled = (selectedItem.size > 0)
-            fileOperationView.findViewById<Button>(R.id.delete).isEnabled = (selectedItem.size > 0)
-            fileOperationView.findViewById<Button>(R.id.rename).isEnabled = (selectedItem.size == 1)
-            fileOperationView.findViewById<Button>(R.id.move).isEnabled = (selectedItem.size == 1)
-            fileToolbarView.findViewById<TextView>(R.id.selectNumber).text =
-                "已选中${selectedItem.size}个文件"
+        }
+    }
+
+    /**
+     * 实现选中列表项变化的事件
+     */
+    inner class MyOnSelectedItemNumberChangeListener :
+        RecyclerListener.OnSelectedItemNumberChangeListener {
+        override fun onSelectedItemNumberChange(value: Int) {
+            download.isEnabled = (value == 1)
+            share.isEnabled = (value > 0)
+            delete.isEnabled = (value > 0)
+            rename.isEnabled = (value == 1)
+            move.isEnabled = (value == 1)
+            selectNumber.text = "已选中${value}个文件"
         }
     }
 
@@ -276,6 +288,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         adapter.mOnItemLongClickListener = MyOnItemLongClickListener()
         // 设置勾选监听器
         adapter.mOnCheckedChangeListener = MyOnCheckedChangeListener()
+        // 设置选中列表项数量变化监听器
+        adapter.mOnSelectedItemNumberChangeListener = MyOnSelectedItemNumberChangeListener()
         // 给recycler设置适配器
         recycler.adapter = adapter
         fetchChildren(backStack.last())
@@ -294,8 +308,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
             } // 看是否是根目录设置是否有返回键
             nodes.clear() // 清空之前的文件
             adapter.setItems(nodes) // 设置数据
-            if (!root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).isRefreshing) {
-                root.findViewById<ProgressBar>(R.id.loading).visibility = View.VISIBLE
+            if (!swipeRefresh.isRefreshing) {
+                loading.visibility = View.VISIBLE
             } // 如果没有下拉刷新就显示loading
             val r = withContext(Dispatchers.IO) {
                 HttpUtil.get("queryChildren?nodeId=${node.nodeId}")
@@ -311,8 +325,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
                 showMessage(r.msg)
             }
             nodes.sortByDescending { it.isDirectory }
-            root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).isRefreshing = false
-            root.findViewById<ProgressBar>(R.id.loading).visibility = View.GONE // 移除loading
+            swipeRefresh.isRefreshing = false
+            loading.visibility = View.GONE // 移除loading
             adapter.setItems(nodes)
         }
     }
@@ -322,9 +336,9 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
      * @return true为可以回退，false为根目录，无法回退，即即将退出应用
      */
     fun back(): Boolean {
-        if (selectStatus) {
-            selectStatus = false
+        if (adapter.selectStatus) {
             adapter.cancelSelect()
+            swipeRefresh.isEnabled = true
             fileOperationWindow.dismiss()
             fileToolbarWindow.dismiss()
             return true

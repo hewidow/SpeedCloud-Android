@@ -20,4 +20,6 @@
     <color name="secondary_icon">#BDBDBD</color>
     <color name="icon_folder">#FFC107</color>
     <color name="icon_file">#676767</color>
+    <color name="row_item_pressed">#BFEEEEEE</color>
+    <color name="row_item_selected">#4090CAF9</color>
 </resources>

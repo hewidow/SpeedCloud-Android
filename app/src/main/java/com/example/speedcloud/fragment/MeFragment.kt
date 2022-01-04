@@ -27,6 +27,10 @@ class MeFragment : Fragment() {
 
     private lateinit var root: View
     private lateinit var user: User
+    private lateinit var logout: Button
+    private lateinit var username: TextView
+    private lateinit var pb_storage: ProgressBar
+    private lateinit var tv_storage: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -38,7 +42,8 @@ class MeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         root = inflater.inflate(R.layout.fragment_me, container, false)
-        root.findViewById<Button>(R.id.logout).setOnClickListener {
+        logout = root.findViewById(R.id.logout)
+        logout.setOnClickListener {
             lifecycleScope.launch {
                 SharedUtil.writeBoolean("autoLogin", false)
                 val r = withContext(Dispatchers.IO) {
@@ -47,19 +52,22 @@ class MeFragment : Fragment() {
                 startAccountActivity()
             }
         }
-        initView()
+        username = root.findViewById(R.id.username)
+        pb_storage = root.findViewById(R.id.pb_storage)
+        tv_storage = root.findViewById(R.id.tv_storage)
+        loadData()
         return root
     }
 
     /**
      * 将数据装载进界面
      */
-    private fun initView() {
+    private fun loadData() {
         user = MainApplication.getInstance().user!!
-        root.findViewById<TextView>(R.id.username).text = user.userDetail.username
-        root.findViewById<ProgressBar>(R.id.pb_storage).progress =
+        username.text = user.userDetail.username
+        pb_storage.progress =
             ((user.userDetail.totalSize - user.userDetail.availableSize) * 100F / user.userDetail.totalSize).toInt()
-        root.findViewById<TextView>(R.id.tv_storage).text = getStorageText()
+        tv_storage.text = getStorageText()
     }
 
     /**
@@ -97,7 +105,7 @@ class MeFragment : Fragment() {
             if (r.success) {
                 MainApplication.getInstance().user?.userDetail =
                     Gson().fromJson(r.msg, UserDetail::class.java)
-                initView()
+                loadData()
             }
         }
     }

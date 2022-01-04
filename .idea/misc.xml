@@ -25,6 +25,7 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_outline_share_24.xml" value="0.1421875" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/indicator_selected.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/progress_scale.xml" value="0.26564102564102565" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/row_item_selector.xml" value="0.16822916666666668" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/shape_edit_focus.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/shape_edit_normal.xml" value="0.22314814814814815" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tab_selector_file.xml" value="0.1421875" />
@@ -36,7 +37,7 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/test.xml" value="0.13125" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_account.xml" value="0.264" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_forget.xml" value="0.1296875" />
-        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_swap.xml" value="0.264" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/fragment_download.xml" value="0.1" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/fragment_file.xml" value="0.2" />
