@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="filename"
-            android:textColor="@color/main_text"
+            android:textColor="@color/text_main"
             android:textSize="16sp" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="2022-1-1 00:00:00  66.66MB"
-            android:textColor="@color/secondary_text"
+            android:textColor="@color/text_secondary"
             android:textSize="13sp" />
     </LinearLayout>
 

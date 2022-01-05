@@ -19,6 +19,8 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_baseline_insert_drive_file_24.xml" value="0.13489583333333333" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_baseline_radio_button_unchecked_24.xml" value="0.13125" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_download.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_download_24.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_logo.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_move.xml" value="0.12291666666666666" />
@@ -33,6 +35,7 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tab_selector_me.xml" value="0.1421875" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tabitem_selected.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tabitem_selector.xml" value="0.26564102564102565" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tabitem_unselected.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tablayout.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tablayout_selector.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/test.xml" value="0.13125" />
@@ -52,12 +55,16 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_row_file_select.xml" value="0.11875" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_swap.xml" value="0.264" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_swap_laoding.xml" value="0.2" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/row_item_file.xml" value="0.11413043478260869" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/row_item_swap.xml" value="0.11413043478260869" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/row_item_swap_laoding.xml" value="0.11413043478260869" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/window_file_operation.xml" value="0.536" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/window_file_toolbar.xml" value="0.2" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/menu/menu_file.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/menu/menu_file_collapsed.xml" value="0.12239583333333333" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/menu/menu_file_expanded.xml" value="0.11510416666666666" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/menu/menu_file_operation.xml" value="0.12604166666666666" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.17395833333333333" />
       </map>
     </option>
   </component>

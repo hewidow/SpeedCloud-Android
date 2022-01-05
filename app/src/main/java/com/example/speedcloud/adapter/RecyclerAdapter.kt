@@ -51,7 +51,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
      */
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(viewGroup.context).inflate(R.layout.item_file, viewGroup, false)
+            LayoutInflater.from(viewGroup.context).inflate(R.layout.row_item_file, viewGroup, false)
         iconFolder =
             ContextCompat.getDrawable(viewGroup.context, R.drawable.ic_baseline_folder_24)!!
         iconFolderColor = ContextCompat.getColor(viewGroup.context, R.color.icon_folder)
@@ -122,8 +122,8 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
         viewHolder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             checkStatus[position] = isChecked
             viewHolder.rowItem.isSelected = isChecked
-            if (isChecked) ++selectedItemNumber
-            else --selectedItemNumber
+            if (isChecked) selectedItemNumber += 1
+            else selectedItemNumber -= 1
             mOnCheckedChangeListener?.onCheckedChange(buttonView, position, isChecked)
         }
 

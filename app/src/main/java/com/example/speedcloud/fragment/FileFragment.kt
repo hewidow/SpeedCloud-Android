@@ -46,10 +46,10 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: RecyclerAdapter
     private lateinit var backArrowDrawable: Drawable
-    private lateinit var fileOperationView: View
-    private lateinit var fileOperationWindow: PopupWindow
     private lateinit var fileToolbarView: View
     private lateinit var fileToolbarWindow: PopupWindow
+    private lateinit var fileActionbarView: View
+    private lateinit var fileActionbarWindow: PopupWindow
     private lateinit var nestedScrollView: NestedScrollView
     private lateinit var loading: ProgressBar
     private lateinit var selectNumber: TextView
@@ -80,16 +80,16 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // 获取编辑模式的底部操作栏view对象
-        fileOperationView = inflater.inflate(R.layout.window_file_operation, container, false)
-        initFileOperator()
-
-        // 获取编辑模式的顶部操操作栏view对象
-        fileToolbarView = inflater.inflate(R.layout.window_file_toolbar, container, false)
+        // 获取编辑模式的底部工具栏view对象
+        fileToolbarView = inflater.inflate(R.layout.popup_window_file_toolbar, container, false)
         initFileToolbar()
 
+        // 获取编辑模式的顶部操作栏view对象
+        fileActionbarView = inflater.inflate(R.layout.popup_window_file_actionbar, container, false)
+        initFileActionbar()
+
         root = inflater.inflate(R.layout.fragment_file, container, false)
-        initToolBar()
+        initAppbar()
         initRefresh()
         initRecycler()
 
@@ -97,7 +97,7 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     }
 
     /**
-     * 初始化刷新
+     * 初始化下拉刷新和进入文件夹的加载
      */
     private fun initRefresh() {
         loading = root.findViewById(R.id.loading)
@@ -116,11 +116,11 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     /**
      * 初始化编辑模式的顶部操作栏
      */
-    private fun initFileToolbar() {
-        cancel = fileToolbarView.findViewById(R.id.cancel)
-        selectAll = fileToolbarView.findViewById(R.id.selectAll)
-        unselectAll = fileToolbarView.findViewById(R.id.unselectAll)
-        selectNumber = fileToolbarView.findViewById(R.id.selectNumber)
+    private fun initFileActionbar() {
+        cancel = fileActionbarView.findViewById(R.id.cancel)
+        selectAll = fileActionbarView.findViewById(R.id.selectAll)
+        unselectAll = fileActionbarView.findViewById(R.id.unselectAll)
+        selectNumber = fileActionbarView.findViewById(R.id.selectNumber)
 
         cancel.setOnClickListener { back() }
         selectAll.setOnClickListener {
@@ -133,24 +133,24 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
             unselectAll.visibility = View.GONE
             selectAll.visibility = View.VISIBLE
         }
-        fileToolbarWindow = PopupWindow(
-            fileToolbarView,
+        fileActionbarWindow = PopupWindow(
+            fileActionbarView,
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             false
         )
-        fileToolbarWindow.animationStyle = R.style.popup_window_top_bottom_anim
+        fileActionbarWindow.animationStyle = R.style.popup_window_top_bottom_anim
     }
 
     /**
-     * 初始化编辑模式的底部操作栏
+     * 初始化编辑模式的底部工具栏
      */
-    private fun initFileOperator() {
-        download = fileOperationView.findViewById(R.id.download)
-        share = fileOperationView.findViewById(R.id.share)
-        delete = fileOperationView.findViewById(R.id.delete)
-        rename = fileOperationView.findViewById(R.id.rename)
-        move = fileOperationView.findViewById(R.id.move)
+    private fun initFileToolbar() {
+        download = fileToolbarView.findViewById(R.id.download)
+        share = fileToolbarView.findViewById(R.id.share)
+        delete = fileToolbarView.findViewById(R.id.delete)
+        rename = fileToolbarView.findViewById(R.id.rename)
+        move = fileToolbarView.findViewById(R.id.move)
         download.setOnClickListener {
             getSelectedItem()
             val token = MainApplication.getInstance().user?.token
@@ -168,14 +168,14 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
             Log.d("hgf", "download Id: ${id}")
         }
         // 设置窗口大小
-        fileOperationWindow = PopupWindow(
-            fileOperationView,
+        fileToolbarWindow = PopupWindow(
+            fileToolbarView,
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             false
         )
         // 设置动画效果
-        fileOperationWindow.animationStyle = R.style.popup_window_bottom_top_anim
+        fileToolbarWindow.animationStyle = R.style.popup_window_bottom_top_anim
     }
 
     /**
@@ -189,25 +189,27 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     }
 
     /**
-     * 折叠时显示搜索按钮，展开时隐藏搜索按钮
+     *
      */
     override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-        if (abs(verticalOffset) >= appBarLayout.totalScrollRange) {
-            toolbar.menu.findItem(R.id.menu_search).isVisible = true
-        } else if (verticalOffset == 0) {
-            toolbar.menu.findItem(R.id.menu_search).isVisible = false
-        }
+
     }
 
     /**
-     * 初始化工具栏
+     * 初始化程序应用栏
      */
-    private fun initToolBar() {
+    private fun initAppbar() {
         appbar = root.findViewById(R.id.appbar)
         toolbar = root.findViewById(R.id.toolbar)
         nestedScrollView = root.findViewById(R.id.nestedScrollView)
 
-        appbar.addOnOffsetChangedListener(this) // 监听appbar收缩程度
+        appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            if (abs(verticalOffset) >= appBarLayout.totalScrollRange) {
+                toolbar.menu.findItem(R.id.menu_search).isVisible = true
+            } else if (verticalOffset == 0) {
+                toolbar.menu.findItem(R.id.menu_search).isVisible = false
+            }
+        }) // 监听appbar收缩程度，折叠时显示搜索按钮，展开时隐藏搜索按钮
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_swap -> {
@@ -244,8 +246,8 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
      */
     inner class MyOnItemLongClickListener : RecyclerListener.OnItemLongClickListener {
         override fun onItemLongClick(view: View, position: Int) {
-            fileOperationWindow.showAsDropDown(root)
-            fileToolbarWindow.showAtLocation(root, Gravity.START or Gravity.TOP, 0, 0)
+            fileToolbarWindow.showAsDropDown(root)
+            fileActionbarWindow.showAtLocation(root, Gravity.START or Gravity.TOP, 0, 0)
             swipeRefresh.isEnabled = false
         }
     }
@@ -333,14 +335,14 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
 
     /**
      * 返回能否回退上一层，能就直接回退上一层
-     * @return true为可以回退，false为根目录，无法回退，即即将退出应用
+     * @return true为可以回退，false为已经到达根目录，无法回退，即将退出应用
      */
     fun back(): Boolean {
         if (adapter.selectStatus) {
             adapter.cancelSelect()
             swipeRefresh.isEnabled = true
-            fileOperationWindow.dismiss()
             fileToolbarWindow.dismiss()
+            fileActionbarWindow.dismiss()
             return true
         } // 处于select模式
         if (backStack.size <= 1) return false
