@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView"
+            android:text="2022-1-1 00:00:00  66.66MB"
             android:textColor="@color/secondary_text"
             android:textSize="13sp" />
     </LinearLayout>

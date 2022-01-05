@@ -39,6 +39,7 @@ object HttpUtil {
             conn.setRequestProperty("Connection", "Keep-Alive")
             conn.setRequestProperty("accept", "application/json")
             conn.setRequestProperty("token", MainApplication.getInstance().user?.token ?: "")
+            conn.connectTimeout = 5000
 
             // 设置POST的请求头和请求体
             if (requestMethod == "POST") {
@@ -79,7 +80,7 @@ object HttpUtil {
         } finally {
             conn?.disconnect()
         }
-        return Result(false, "未知错误")
+        return Result(false, "连接超时")
     }
 
     fun get(path: String): Result {

@@ -21,6 +21,7 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_baseline_radio_button_unchecked_24.xml" value="0.13125" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_logo.xml" value="0.14583333333333334" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_move.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_outline_folder_24.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_outline_share_24.xml" value="0.1421875" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/indicator_selected.xml" value="0.26979166666666665" />
@@ -39,7 +40,7 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_forget.xml" value="0.1296875" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_swap.xml" value="0.264" />
-        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/fragment_download.xml" value="0.1" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/fragment_download.xml" value="0.264" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/fragment_file.xml" value="0.2" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/fragment_forget.xml" value="0.32421875" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/fragment_login.xml" value="0.264" />
@@ -49,6 +50,8 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_file.xml" value="0.1933876811594203" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_row_file.xml" value="0.264" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_row_file_select.xml" value="0.11875" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_swap.xml" value="0.264" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_swap_laoding.xml" value="0.2" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/window_file_operation.xml" value="0.536" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/window_file_toolbar.xml" value="0.2" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/menu/menu_file.xml" value="0.25364583333333335" />

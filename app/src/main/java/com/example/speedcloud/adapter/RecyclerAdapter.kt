@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.R
 import com.example.speedcloud.bean.Node
-import com.example.speedcloud.interfaces.RecyclerListener
+import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.util.FileUtil
 
 class RecyclerAdapter(private var nodes: ArrayList<Node>) :
@@ -51,7 +51,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
      */
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(viewGroup.context).inflate(R.layout.item_row_file, viewGroup, false)
+            LayoutInflater.from(viewGroup.context).inflate(R.layout.item_file, viewGroup, false)
         iconFolder =
             ContextCompat.getDrawable(viewGroup.context, R.drawable.ic_baseline_folder_24)!!
         iconFolderColor = ContextCompat.getColor(viewGroup.context, R.color.icon_folder)
@@ -59,6 +59,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
             viewGroup.context,
             R.drawable.ic_baseline_insert_drive_file_24
         )!!
+        iconFileColor = ContextCompat.getColor(viewGroup.context, R.color.icon_file)
         return ViewHolder(view)
     }
 

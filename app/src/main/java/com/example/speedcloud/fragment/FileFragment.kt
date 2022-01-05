@@ -25,7 +25,7 @@ import com.example.speedcloud.R
 import com.example.speedcloud.SwapActivity
 import com.example.speedcloud.adapter.RecyclerAdapter
 import com.example.speedcloud.bean.Node
-import com.example.speedcloud.interfaces.RecyclerListener
+import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.util.HttpUtil
 import com.google.android.material.appbar.AppBarLayout
 import com.google.gson.Gson
