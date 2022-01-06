@@ -45,6 +45,7 @@ class AccountActivity : AppCompatActivity() {
 
     /**
      * 切换登录、注册、忘记密码的fragment
+     * 通过add、hide、show切换
      */
     private fun setFragment(type: FragmentType) {
         setTextButton(type)

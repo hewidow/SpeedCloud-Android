@@ -19,17 +19,17 @@ import com.example.speedcloud.util.FileUtil
 class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    var mOnItemClickListener: RecyclerListener.OnItemClickListener? = null
-    var mOnItemLongClickListener: RecyclerListener.OnItemLongClickListener? = null
-    var mOnCheckedChangeListener: RecyclerListener.OnCheckedChangeListener? = null
-    var mOnSelectedItemNumberChangeListener: RecyclerListener.OnSelectedItemNumberChangeListener? =
+    var onItemClickListener: RecyclerListener.OnItemClickListener? = null
+    var onItemLongClickListener: RecyclerListener.OnItemLongClickListener? = null
+    var onCheckedChangeListener: RecyclerListener.OnCheckedChangeListener? = null
+    var onSelectedItemNumberChangeListener: RecyclerListener.OnSelectedItemNumberChangeListener? =
         null
     var selectStatus: Boolean = false
     var checkStatus: Array<Boolean> = Array(nodes.size) { false }
     private var selectedItemNumber: Int = 0
         set(value) {
             field = value
-            mOnSelectedItemNumberChangeListener?.onSelectedItemNumberChange(value)
+            onSelectedItemNumberChangeListener?.onSelectedItemNumberChange(value)
         }
     private lateinit var iconFolder: Drawable
     private var iconFolderColor: Int = 0
@@ -93,13 +93,13 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
         } else {
             // 设置item点击监听
             viewHolder.rowItem.setOnClickListener {
-                mOnItemClickListener?.onItemClick(it, position) // 监听事件回调
+                onItemClickListener?.onItemClick(it, position) // 监听事件回调
             }
             // 设置item长按监听
             viewHolder.rowItem.setOnLongClickListener {
                 checkStatus[position] = true // 长按的那一项设置为true
                 selectedItemNumber = 1
-                mOnItemLongClickListener?.onItemLongClick(it, position)
+                onItemLongClickListener?.onItemLongClick(it, position)
                 startSelect()
                 true
             }
@@ -124,7 +124,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
             viewHolder.rowItem.isSelected = isChecked
             if (isChecked) selectedItemNumber += 1
             else selectedItemNumber -= 1
-            mOnCheckedChangeListener?.onCheckedChange(buttonView, position, isChecked)
+            onCheckedChangeListener?.onCheckedChange(buttonView, position, isChecked)
         }
 
     }

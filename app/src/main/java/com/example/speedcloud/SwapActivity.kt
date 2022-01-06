@@ -1,6 +1,5 @@
 package com.example.speedcloud
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,13 +12,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class SwapActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySwapBinding
-    private lateinit var mContext: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySwapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        mContext = this
+        
         binding.toolbar.setNavigationOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }

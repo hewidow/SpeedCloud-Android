@@ -16,6 +16,14 @@
         android:theme="@style/Theme.SpeedCloud"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true">
+        <receiver
+            android:name=".receiver.CompleteReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".SwapActivity"
             android:exported="true" />

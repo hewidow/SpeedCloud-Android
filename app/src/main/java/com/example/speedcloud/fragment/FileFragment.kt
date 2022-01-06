@@ -1,11 +1,13 @@
 package com.example.speedcloud.fragment
 
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.Intent
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment.DIRECTORY_DOWNLOADS
+import android.os.Environment
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -25,6 +27,7 @@ import com.example.speedcloud.R
 import com.example.speedcloud.SwapActivity
 import com.example.speedcloud.adapter.RecyclerAdapter
 import com.example.speedcloud.bean.Node
+import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.util.HttpUtil
 import com.google.android.material.appbar.AppBarLayout
@@ -37,7 +40,7 @@ import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 
-class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
+class FileFragment : Fragment() {
 
 
     private lateinit var root: View
@@ -152,20 +155,13 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         rename = fileToolbarView.findViewById(R.id.rename)
         move = fileToolbarView.findViewById(R.id.move)
         download.setOnClickListener {
-            getSelectedItem()
-            val token = MainApplication.getInstance().user?.token
-            val request =
-                DownloadManager.Request(Uri.parse("${getString(R.string.baseUrl)}download?token=${token}&nodeId=${selectedItem[0].nodeId}&online=0"))
-            request.setDestinationInExternalPublicDir(
-                DIRECTORY_DOWNLOADS,
-                "${selectedItem[0].nodeName}"
-            )
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-            request.setTitle("正在下载...")
-            request.setDescription("SpeedCloud")
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-            val id = MainApplication.getInstance().downloadManager.enqueue(request)
-            Log.d("hgf", "download Id: ${id}")
+            showDialog("确认下载", "将使用移动数据或WIFI进行下载") {
+                back()
+                startDownload()
+            }
+        }
+        delete.setOnClickListener {
+            showDialog("删除文件", "10天内可在回收站中找回已删文件") { back() }
         }
         // 设置窗口大小
         fileToolbarWindow = PopupWindow(
@@ -178,6 +174,52 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         fileToolbarWindow.animationStyle = R.style.popup_window_bottom_top_anim
     }
 
+    private fun startDownload() {
+        getSelectedItem()
+        val token = MainApplication.getInstance().user?.token
+        val request =
+            DownloadManager.Request(Uri.parse("${getString(R.string.baseUrl)}download?token=${token}&nodeId=${selectedItem[0].nodeId}&online=0"))
+        request.setDestinationInExternalPublicDir(
+            Environment.DIRECTORY_DOWNLOADS,
+            "${selectedItem[0].nodeName}"
+        )
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+        request.setTitle("正在下载...")
+        request.setDescription("SpeedCloud")
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+        val id = MainApplication.getInstance().downloadManager.enqueue(request)
+        MainApplication.getInstance().swapDataBase.swapNodeDao()
+            .insertAll(
+                SwapNode(0, false, Date(), 0, selectedItem[0].nodeName, id, 0, 0, 0)
+            ) // 往数据库中插入下载记录
+        Log.d("hgf", "download Id: ${id}")
+    }
+
+    /**
+     * 生成对话框
+     */
+    private fun showDialog(title: String, message: String, onClickListener: View.OnClickListener) {
+        val builder = AlertDialog.Builder(context)
+        val view = layoutInflater.inflate(R.layout.dialog_alert, null)
+        val dialog = builder.setView(view).create()
+        view.findViewById<TextView>(R.id.title).text = title
+        view.findViewById<TextView>(R.id.message).text = message
+        view.findViewById<TextView>(R.id.cancel).setOnClickListener { dialog.dismiss() }
+        view.findViewById<TextView>(R.id.confirm).setOnClickListener {
+            dialog.dismiss()
+            onClickListener.onClick(it)
+        }
+        dialog.show()
+        val displayRectangle = Rect()
+        activity!!.window.decorView.getWindowVisibleDisplayFrame(displayRectangle)
+        dialog.window!!.setLayout(
+            (displayRectangle.width() * 0.75).toInt(),
+            dialog.window!!.attributes.height
+        )
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+
+    }
+
     /**
      * 获取选中的列表项
      */
@@ -186,13 +228,6 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         for (i in adapter.checkStatus.indices) {
             if (adapter.checkStatus[i]) selectedItem.add(nodes[i])
         }
-    }
-
-    /**
-     *
-     */
-    override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-
     }
 
     /**
@@ -285,13 +320,13 @@ class FileFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         // 设置数据适配器
         adapter = RecyclerAdapter(nodes)
         // 设置点击监听器
-        adapter.mOnItemClickListener = MyOnItemClickListener()
+        adapter.onItemClickListener = MyOnItemClickListener()
         // 设置长按监听器
-        adapter.mOnItemLongClickListener = MyOnItemLongClickListener()
+        adapter.onItemLongClickListener = MyOnItemLongClickListener()
         // 设置勾选监听器
-        adapter.mOnCheckedChangeListener = MyOnCheckedChangeListener()
+        adapter.onCheckedChangeListener = MyOnCheckedChangeListener()
         // 设置选中列表项数量变化监听器
-        adapter.mOnSelectedItemNumberChangeListener = MyOnSelectedItemNumberChangeListener()
+        adapter.onSelectedItemNumberChangeListener = MyOnSelectedItemNumberChangeListener()
         // 给recycler设置适配器
         recycler.adapter = adapter
         fetchChildren(backStack.last())

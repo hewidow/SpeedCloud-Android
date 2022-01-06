@@ -1,10 +1,8 @@
 package com.example.speedcloud
 
-import android.Manifest
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -56,10 +54,10 @@ class MainActivity : AppCompatActivity() {
             }
         }.attach()
 
-        // 动态请求存储权限
-        ActivityCompat.requestPermissions(this, Array(1) {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        }, 1)
+//        // 动态请求存储权限
+//        ActivityCompat.requestPermissions(this, Array(1) {
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE
+//        }, 1)
     }
 
     override fun onBackPressed() {

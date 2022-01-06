@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_baseline_folder_24" />
+        app:srcCompat="@drawable/ic_baseline_insert_drive_file_24" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -58,34 +58,51 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="10KB/S"
-                android:textAlignment="textEnd" />
+                android:textAlignment="textEnd"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
         </LinearLayout>
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageButton
-            android:id="@+id/swapPause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_baseline_cancel_24" />
-
-        <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_download_24" />
-    </RelativeLayout>
-
-    <ImageButton
-        android:id="@+id/swapCancel"
+    <LinearLayout
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/ic_baseline_cancel_24" />
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp">
+
+            <ImageButton
+                android:id="@+id/swapPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:tint="@color/blue_500"
+                app:srcCompat="@drawable/ic_baseline_pause_circle_filled_24" />
+
+            <ImageButton
+                android:id="@+id/swapPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:tint="@color/blue_500"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_download_24" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/swapCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:tint="@color/blue_500"
+            app:srcCompat="@drawable/ic_baseline_cancel_24" />
+    </LinearLayout>
 
 </LinearLayout>
