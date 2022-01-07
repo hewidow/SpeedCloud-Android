@@ -2,13 +2,15 @@ package com.example.speedcloud.fragment
 
 import android.app.AlertDialog
 import android.app.DownloadManager
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
+import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +29,7 @@ import com.example.speedcloud.R
 import com.example.speedcloud.SwapActivity
 import com.example.speedcloud.adapter.RecyclerAdapter
 import com.example.speedcloud.bean.Node
+import com.example.speedcloud.bean.ShareLink
 import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.util.HttpUtil
@@ -112,7 +115,7 @@ class FileFragment : Fragment() {
         )
         // 设置下拉刷新监听器
         swipeRefresh.setOnRefreshListener {
-            fetchChildren(backStack.last())
+            refreshPath()
         }
     }
 
@@ -146,6 +149,15 @@ class FileFragment : Fragment() {
     }
 
     /**
+     * 设置背景透明度
+     */
+    private fun setBackgroundAlpha(alpha: Float) {
+        val lp = activity!!.window.attributes
+        lp.alpha = alpha
+        activity!!.window.attributes = lp
+    }
+
+    /**
      * 初始化编辑模式的底部工具栏
      */
     private fun initFileToolbar() {
@@ -155,13 +167,109 @@ class FileFragment : Fragment() {
         rename = fileToolbarView.findViewById(R.id.rename)
         move = fileToolbarView.findViewById(R.id.move)
         download.setOnClickListener {
-            showDialog("确认下载", "将使用移动数据或WIFI进行下载") {
+            getSelectedItem()
+            showDialog("确认下载", "将使用移动数据或WIFI进行下载") { startDownload() }
+        }
+        share.setOnClickListener {
+            getSelectedItem()
+            val view = layoutInflater.inflate(R.layout.dialog_share, null)
+            val dialog = AlertDialog.Builder(context).setView(view).create()
+            view.findViewById<Spinner>(R.id.spinner).setSelection(1) // 设置第一项
+            view.findViewById<TextView>(R.id.copyLink).setOnClickListener {
+                dialog.dismiss()
                 back()
-                startDownload()
-            }
+                lifecycleScope.launch {
+                    val r = withContext(Dispatchers.IO) {
+                        HttpUtil.post(
+                            "share", Gson().toJson(
+                                mapOf(
+                                    "srcNodeIds" to selectedItem.map { it.nodeId },
+                                    "type" to 1
+                                )
+                            )
+                        )
+                    } // 获取分享链接
+                    if (r.success) {
+                        val shareLink = Gson().fromJson(r.msg, ShareLink::class.java)
+                        (MainApplication.getInstance()
+                            .getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(
+                            ClipData.newPlainText(
+                                "SpeedCloud Share Link",
+                                "分享链接:\n${getString(R.string.host)}share?id=${shareLink.uniqueId}\n提取码: ${shareLink.checkCode}"
+                            )
+                        )
+                        Toast.makeText(context, "复制成功", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } // 设置点击复制链接监听
+            dialog.show()
+            dialog.window!!.setGravity(Gravity.BOTTOM)
+            dialog.window!!.setWindowAnimations(R.style.popup_window_bottom_top_anim)
+            dialog.window!!.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            // 去除默认的16dp的padding，设置背景使其宽度和屏幕一致
+            dialog.window!!.decorView.setPadding(0, 0, 0, 0)
+            dialog.window!!.decorView.setBackgroundColor(
+                ContextCompat.getColor(
+                    context!!,
+                    R.color.background_secondary
+                )
+            )
         }
         delete.setOnClickListener {
-            showDialog("删除文件", "10天内可在回收站中找回已删文件") { back() }
+            getSelectedItem()
+            showDialog("删除文件", "10天内可在回收站中找回已删文件") {
+                lifecycleScope.launch {
+                    val r = withContext(Dispatchers.IO) {
+                        HttpUtil.post("deleteNode", Gson().toJson(selectedItem.map { it.nodeId }))
+                    }
+                    Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
+                    refreshPath()
+                }
+            }
+        }
+        rename.setOnClickListener {
+            getSelectedItem()
+            val view = layoutInflater.inflate(R.layout.dialog_rename, null)
+            val name = view.findViewById<EditText>(R.id.name)
+            val dialog = AlertDialog.Builder(context).setTitle("重命名").setView(view)
+                .setNegativeButton("取消") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton("确定") { dialog, _ ->
+                    dialog.dismiss()
+                    back()
+                    lifecycleScope.launch {
+                        val r = withContext(Dispatchers.IO) {
+                            HttpUtil.post(
+                                "renameNode", Gson().toJson(
+                                    mapOf(
+                                        "newName" to name.text.toString(),
+                                        "nodeId" to selectedItem[0].nodeId
+                                    )
+                                )
+                            )
+                        }
+                        if (r.success) {
+                            refreshPath()
+                            Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }.create()
+            dialog.show()
+            name.setText(selectedItem[0].nodeName)
+            name.requestFocus() // 请求焦点
+//            (MainApplication.getInstance()
+//                .getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(
+//                name,
+//                InputMethodManager.SHOW_FORCED
+//            ) // 打开键盘
         }
         // 设置窗口大小
         fileToolbarWindow = PopupWindow(
@@ -174,17 +282,19 @@ class FileFragment : Fragment() {
         fileToolbarWindow.animationStyle = R.style.popup_window_bottom_top_anim
     }
 
+    /**
+     * 开始下载任务
+     */
     private fun startDownload() {
-        getSelectedItem()
         val token = MainApplication.getInstance().user?.token
         val request =
             DownloadManager.Request(Uri.parse("${getString(R.string.baseUrl)}download?token=${token}&nodeId=${selectedItem[0].nodeId}&online=0"))
         request.setDestinationInExternalPublicDir(
-            Environment.DIRECTORY_DOWNLOADS,
-            "${selectedItem[0].nodeName}"
+            DIRECTORY_DOWNLOADS,
+            selectedItem[0].nodeName
         )
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-        request.setTitle("正在下载...")
+        request.setTitle("正在下载 ${selectedItem[0].nodeName}")
         request.setDescription("SpeedCloud")
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         val id = MainApplication.getInstance().downloadManager.enqueue(request)
@@ -192,7 +302,7 @@ class FileFragment : Fragment() {
             .insertAll(
                 SwapNode(0, false, Date(), 0, selectedItem[0].nodeName, id, 0, 0, 0)
             ) // 往数据库中插入下载记录
-        Log.d("hgf", "download Id: ${id}")
+        Toast.makeText(context, "开始下载...", Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -201,12 +311,13 @@ class FileFragment : Fragment() {
     private fun showDialog(title: String, message: String, onClickListener: View.OnClickListener) {
         val builder = AlertDialog.Builder(context)
         val view = layoutInflater.inflate(R.layout.dialog_alert, null)
-        val dialog = builder.setView(view).create()
+        val dialog = builder.setCancelable(false).setView(view).create()
         view.findViewById<TextView>(R.id.title).text = title
         view.findViewById<TextView>(R.id.message).text = message
         view.findViewById<TextView>(R.id.cancel).setOnClickListener { dialog.dismiss() }
         view.findViewById<TextView>(R.id.confirm).setOnClickListener {
             dialog.dismiss()
+            back()
             onClickListener.onClick(it)
         }
         dialog.show()
@@ -269,8 +380,7 @@ class FileFragment : Fragment() {
     inner class MyOnItemClickListener : RecyclerListener.OnItemClickListener {
         override fun onItemClick(view: View, position: Int) {
             if (nodes[position].isDirectory) { // 是文件夹
-                backStack.add(nodes[position]) // 加入back栈
-                fetchChildren(nodes[position]) // 获取新目录
+                refreshPath(arrayListOf(nodes[position]))
             } else {
             }
         }
@@ -329,6 +439,16 @@ class FileFragment : Fragment() {
         adapter.onSelectedItemNumberChangeListener = MyOnSelectedItemNumberChangeListener()
         // 给recycler设置适配器
         recycler.adapter = adapter
+        refreshPath()
+    }
+
+    /**
+     * 按照所给的数组进入相应的路径
+     * @param path 若为空或不填，则刷新当前目录；若第一个元素nodeId为1，则为绝对路径，替换当前backStack，否则为相对路径
+     */
+    private fun refreshPath(path: ArrayList<Node> = ArrayList()) {
+        if (path.isNotEmpty() && path[0].nodeId == 1) backStack = path
+        else backStack.addAll(path)
         fetchChildren(backStack.last())
     }
 
@@ -369,7 +489,7 @@ class FileFragment : Fragment() {
     }
 
     /**
-     * 返回能否回退上一层，能就直接回退上一层
+     * 返回能否回退上一层，能就直接回退上一层。注意：如需调用getSelectedItem()，需在调用back()前
      * @return true为可以回退，false为已经到达根目录，无法回退，即将退出应用
      */
     fun back(): Boolean {
@@ -382,7 +502,7 @@ class FileFragment : Fragment() {
         } // 处于select模式
         if (backStack.size <= 1) return false
         backStack.removeLast()
-        fetchChildren(backStack.last())
+        refreshPath()
         return true
     }
 

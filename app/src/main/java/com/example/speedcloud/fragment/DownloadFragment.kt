@@ -2,8 +2,8 @@ package com.example.speedcloud.fragment
 
 import android.app.DownloadManager
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
+import android.os.Environment.DIRECTORY_DOWNLOADS
+import android.os.Environment.getExternalStoragePublicDirectory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,18 +46,17 @@ class DownloadFragment : Fragment() {
         loadedNodes.addAll(swapDataBase.swapNodeDao().getAllLoadedByType(false))
         initRecycler()
         binding.downloadLocation.text =
-            "文件下载至：${context!!.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.path}"
-        binding.tvLoading.text = "正在下载（${loadingNodes.size}）"
-        binding.tvLoaded.text = "下载完成（${loadedNodes.size}）"
-
+            "文件下载至：${getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS)?.path}"
         initTimedTask()
         return binding.root
     }
 
+    /**
+     * 简单起见，初始化一个协程每秒刷新，全部一起查询和更新
+     */
     private fun initTimedTask() {
         lifecycleScope.launch {
             while (true) {
-                Log.d("hgf", "123")
                 withContext(Dispatchers.IO) {
                     loadingNodes.clear()
                     loadedNodes.clear()
@@ -70,8 +69,10 @@ class DownloadFragment : Fragment() {
                         loadingNodes[i].size = res.second
                         loadingNodes[i].state = res.third
                     }
+                    swapDataBase.swapNodeDao().updateAll(*loadingNodes.toTypedArray())
                 }
-                // 这里简单起见，直接全部更新
+                binding.tvLoading.text = "正在下载（${loadingNodes.size}）"
+                binding.tvLoaded.text = "下载完成（${loadedNodes.size}）"
                 loadingAdapter.setItems(loadingNodes)
                 loadedAdapter.setItems(loadedNodes)
                 delay(1000) // 1秒更新一次
@@ -79,6 +80,9 @@ class DownloadFragment : Fragment() {
         }
     }
 
+    /**
+     * 根据id从DownloadManager中查询下载进度
+     */
     private fun getDownloadProgress(id: Long): Triple<Long, Long, Int> {
         val query = DownloadManager.Query().setFilterById(id)
         downloadManager.query(query)?.use { c ->
@@ -93,6 +97,9 @@ class DownloadFragment : Fragment() {
         return Triple(0, 0, 0)
     }
 
+    /**
+     * 初始化垂直列表
+     */
     private fun initRecycler() {
         // 设置一个垂直方向的网格布局管理器
         binding.rvLoading.layoutManager = GridLayoutManager(this.activity, 1)

@@ -30,7 +30,7 @@ class RippleLinearLayout : LinearLayout {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        timer.cancel() // 销毁时暂停定时任务
+        timer.cancel() // 销毁时取消定时任务
     }
 
     lateinit var mPaint: Paint

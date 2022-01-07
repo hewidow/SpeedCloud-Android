@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:text="2022-1-1 00:00:00  66.66MB"
             android:textColor="@color/text_secondary"
-            android:textSize="13sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

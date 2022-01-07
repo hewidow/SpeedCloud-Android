@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SpeedCloud</string>
+    <string-array name="share_time_array">
+        <item>一天</item>
+        <item>三天</item>
+    </string-array>
 </resources>

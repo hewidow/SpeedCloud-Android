@@ -25,6 +25,7 @@
             android:backgroundTint="@color/button_background_color_selector"
             android:text="下载"
             android:textColor="@color/button_text_color_selector"
+            android:textSize="12sp"
             app:icon="@drawable/ic_outline_cloud_download_24"
             app:iconGravity="top"
             app:iconPadding="0dp"
@@ -36,51 +37,55 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:backgroundTint="@color/button_background_color_selector"
-            app:iconTint="@color/button_text_color_selector"
             android:text="分享"
             android:textColor="@color/button_text_color_selector"
+            android:textSize="12sp"
             app:icon="@drawable/ic_outline_share_24"
             app:iconGravity="top"
-            app:iconPadding="0dp" />
+            app:iconPadding="0dp"
+            app:iconTint="@color/button_text_color_selector" />
 
         <Button
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="删除"
             android:backgroundTint="@color/button_background_color_selector"
+            android:text="删除"
             android:textColor="@color/button_text_color_selector"
-            app:iconTint="@color/button_text_color_selector"
+            android:textSize="12sp"
             app:icon="@drawable/ic_outline_delete_24"
             app:iconGravity="top"
-            app:iconPadding="0dp" />
+            app:iconPadding="0dp"
+            app:iconTint="@color/button_text_color_selector" />
 
         <Button
             android:id="@+id/rename"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="重命名"
             android:backgroundTint="@color/button_background_color_selector"
+            android:text="改名"
             android:textColor="@color/button_text_color_selector"
-            app:iconTint="@color/button_text_color_selector"
+            android:textSize="12sp"
             app:icon="@drawable/ic_outline_edit_24"
             app:iconGravity="top"
-            app:iconPadding="0dp" />
+            app:iconPadding="0dp"
+            app:iconTint="@color/button_text_color_selector" />
 
         <Button
             android:id="@+id/move"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="移动"
             android:backgroundTint="@color/button_background_color_selector"
+            android:text="移动"
             android:textColor="@color/button_text_color_selector"
-            app:iconTint="@color/button_text_color_selector"
+            android:textSize="12sp"
             app:icon="@drawable/ic_move_24"
             app:iconGravity="top"
-            app:iconPadding="0dp" />
+            app:iconPadding="0dp"
+            app:iconTint="@color/button_text_color_selector" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

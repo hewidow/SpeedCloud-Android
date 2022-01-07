@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.TextView
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -46,8 +46,8 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
         val password = SharedUtil.readString("password", "")
         val check = SharedUtil.readBoolean("autoLogin", false)
 
-        root.findViewById<TextView>(R.id.username).text = username
-        root.findViewById<TextView>(R.id.password).text = password
+        root.findViewById<EditText>(R.id.username).setText(username)
+        root.findViewById<EditText>(R.id.password).setText(password)
         root.findViewById<CheckBox>(R.id.autoLogin).isChecked = check
 
         // 勾选自动登录且用户名和密码不为空，就自动登录
@@ -76,11 +76,11 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
             // 将用户名和密码存入共享内存
             SharedUtil.writeString(
                 "username",
-                root.findViewById<TextView>(R.id.username).text.toString()
+                root.findViewById<EditText>(R.id.username).text.toString()
             )
             SharedUtil.writeString(
                 "password",
-                root.findViewById<TextView>(R.id.password).text.toString()
+                root.findViewById<EditText>(R.id.password).text.toString()
             )
             SharedUtil.writeBoolean(
                 "autoLogin",
@@ -89,8 +89,8 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
             // 网络请求在IO线程完成
             val r = withContext(Dispatchers.IO) {
                 login(
-                    root.findViewById<TextView>(R.id.username).text.toString(),
-                    root.findViewById<TextView>(R.id.password).text.toString()
+                    root.findViewById<EditText>(R.id.username).text.toString(),
+                    root.findViewById<EditText>(R.id.password).text.toString()
                 )
             }
 

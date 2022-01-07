@@ -1,5 +1,8 @@
 package com.example.speedcloud.bean
 
+/**
+ * 文件节点
+ */
 data class Node(
     val createTime: String,
     val deleteTime: String?,

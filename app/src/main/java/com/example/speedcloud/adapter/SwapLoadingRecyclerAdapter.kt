@@ -1,12 +1,12 @@
 package com.example.speedcloud.adapter
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +17,6 @@ import com.example.speedcloud.util.FileUtil
 
 class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
     RecyclerView.Adapter<SwapLoadingRecyclerAdapter.ViewHolder>() {
-    private val swapDatabase = MainApplication.getInstance().swapDataBase
 
     inner class ViewHolder(binding: RowItemSwapLoadingBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -25,10 +24,9 @@ class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
         val nodeSize: TextView = binding.nodeSize
         val speed: TextView = binding.speed
         val progressBar: ProgressBar = binding.progressBar
-        val button: LinearLayout = binding.button
-        val swapCancel: ImageButton = binding.swapCancel
         val swapPause: ImageButton = binding.swapPause
         val swapPlay: ImageButton = binding.swapPlay
+        val swapCancel: ImageButton = binding.swapCancel
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -50,7 +48,21 @@ class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
             holder.speed.text = "正在等待"
             holder.progressBar.progress = 0
         }
-        holder.button.visibility = View.GONE
+        // DownloadManager不支持暂停
+        holder.swapPause.visibility = View.GONE
+        holder.swapPlay.visibility = View.GONE
+
+        // 取消下载任务
+        holder.swapCancel.setOnClickListener {
+            AlertDialog.Builder(holder.itemView.context).setTitle("确定取消")
+                .setPositiveButton("确定") { _, _ ->
+                    MainApplication.getInstance().downloadManager.remove(nodes[position].task)
+                    MainApplication.getInstance().swapDataBase.swapNodeDao()
+                        .deleteById(nodes[position].id)
+                }.setNegativeButton("取消") { dialog, _ ->
+                    dialog.dismiss()
+                }.create().show()
+        }
     }
 
     override fun getItemCount() = nodes.size
