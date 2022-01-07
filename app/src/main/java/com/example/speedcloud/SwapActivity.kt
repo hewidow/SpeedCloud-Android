@@ -16,7 +16,7 @@ class SwapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySwapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         binding.toolbar.setNavigationOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }
@@ -39,10 +39,10 @@ class SwapActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.viewPage) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.text = "下载"
+                    tab.text = "    下载列表    " // 曲线救国与偷懒式改变tabIndicator宽度
                 }
                 else -> {
-                    tab.text = "上传"
+                    tab.text = "    上传列表    "
                 }
             }
         }.attach()

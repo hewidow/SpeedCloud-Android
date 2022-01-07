@@ -174,7 +174,16 @@ class FileFragment : Fragment() {
             getSelectedItem()
             val view = layoutInflater.inflate(R.layout.dialog_share, null)
             val dialog = AlertDialog.Builder(context).setView(view).create()
-            view.findViewById<Spinner>(R.id.spinner).setSelection(1) // 设置第一项
+            val spinner = view.findViewById<Spinner>(R.id.spinner)
+            ArrayAdapter.createFromResource(
+                context!!,
+                R.array.share_time_array,
+                R.layout.item_spinner
+            ).also { adapter ->
+                adapter.setDropDownViewResource(R.layout.item_spinner)
+                spinner.adapter = adapter
+            } // 设置适配器
+            spinner.setSelection(1) // 设置”三天“那一项
             view.findViewById<TextView>(R.id.copyLink).setOnClickListener {
                 dialog.dismiss()
                 back()

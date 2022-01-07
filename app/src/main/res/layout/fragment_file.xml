@@ -14,7 +14,7 @@
             android:id="@+id/appbar"
 
             android:layout_width="match_parent"
-            android:layout_height="128dp"
+            android:layout_height="116dp"
             app:liftOnScroll="true">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -39,10 +39,10 @@
                     android:background="@drawable/edit_text_selector"
                     android:backgroundTint="@color/background_secondary"
                     android:drawableStart="@drawable/ic_baseline_search_24"
-                    android:ems="10"
                     android:hint="搜索网盘文件"
-                    android:minHeight="48dp"
-                    android:singleLine="true" />
+                    android:minHeight="36dp"
+                    android:singleLine="true"
+                    android:textSize="14sp" />
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"

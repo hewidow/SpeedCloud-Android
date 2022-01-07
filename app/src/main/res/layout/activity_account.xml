@@ -65,8 +65,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="登录"
-                android:textColor="@color/blue_700"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:textColor="@color/blue_700" />
 
             <TextView
                 android:id="@+id/tv_forget"
