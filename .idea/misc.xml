@@ -42,6 +42,8 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1625" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_logo.xml" value="0.14583333333333334" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_logo_text.xml" value="0.2324074074074074" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_logo_text_blue.xml" value="0.2324074074074074" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_move.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_outline_folder_24.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_outline_share_24.xml" value="0.1421875" />
@@ -54,6 +56,7 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/shape_edit_normal.xml" value="0.22314814814814815" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/spinner_background.xml" value="0.1625" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/spinner_selector.xml" value="0.1625" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/splash_background.xml" value="0.2" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tab_item_selected.xml" value="0.2" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tab_item_selector.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/tab_item_unselected.xml" value="0.165625" />
@@ -69,8 +72,10 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_forget.xml" value="0.1296875" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_swap.xml" value="0.264" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/activity_video.xml" value="0.1578125" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/dialog_add.xml" value="0.4" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/dialog_alert.xml" value="0.16" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/dialog_edit_text.xml" value="0.264" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/dialog_rename.xml" value="0.4" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/dialog_share.xml" value="0.30452261306532663" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/fragment_dialog_save.xml" value="0.2" />

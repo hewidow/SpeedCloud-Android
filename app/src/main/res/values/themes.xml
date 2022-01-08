@@ -15,7 +15,11 @@
         <!-- 去除Button底部阴影 -->
         <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button.UnelevatedButton
         </item>
-        <!-- 设置亮色statusBar，使文字变暗-->
+        <!-- 设置亮色statusBar，使文字变暗 -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <!-- 设置启动背景 -->
+        <item name="android:windowSplashscreenContent" tools:targetApi="o">
+            @drawable/splash_background
+        </item>
     </style>
 </resources>

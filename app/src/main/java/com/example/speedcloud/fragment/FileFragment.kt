@@ -1,5 +1,6 @@
 package com.example.speedcloud.fragment
 
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ClipData
@@ -8,7 +9,9 @@ import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -22,22 +25,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.speedcloud.MainApplication
-import com.example.speedcloud.R
-import com.example.speedcloud.SwapActivity
+import com.example.speedcloud.*
 import com.example.speedcloud.adapter.RecyclerAdapter
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.bean.ShareLink
 import com.example.speedcloud.listener.RecyclerListener
-import com.example.speedcloud.util.DialogUtil
-import com.example.speedcloud.util.DownloadManagerUtil
-import com.example.speedcloud.util.HttpUtil
+import com.example.speedcloud.util.*
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -365,12 +365,15 @@ class FileFragment : Fragment() {
                             Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
                         }
                     }
-                }
-            }
+                } // 新建文件夹对话框的回调函数
+            } // 新建文件夹
             view.findViewById<TextView>(R.id.upload).setOnClickListener {
                 dialog.dismiss()
-            }
-
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.type = "*/*"
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                startActivityForResult(intent, REQUEST_CHOOSE_FILE)
+            } // 打开系统自带的文件浏览器
             dialog.show()
             dialog.window!!.setGravity(Gravity.BOTTOM)
             dialog.window!!.setWindowAnimations(R.style.popup_window_bottom_top_anim)
@@ -386,6 +389,24 @@ class FileFragment : Fragment() {
                 )
             )
         }
+    }
+
+    /**
+     * 从系统自带文件浏览器上选择文件的回调
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d("hgf", "$resultCode $requestCode")
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CHOOSE_FILE) upload(data!!.data!!)
+    }
+
+    /**
+     * 上传文件
+     */
+    private fun upload(uri: Uri) {
+        val path = UriUtil.getFileAbsolutePath(context, uri)
+        val file = File(path)
+        Log.d("hgf", "${file.path} ${file.name} ${file.length()}")
     }
 
     /**
@@ -439,6 +460,9 @@ class FileFragment : Fragment() {
             if (nodes[position].isDirectory) { // 是文件夹
                 refreshPath(arrayListOf(nodes[position]))
             } else {
+                val intent = Intent(context, VideoActivity::class.java)
+                intent.putExtra("node", Gson().toJson(nodes[position]))
+                startActivity(intent)
             }
         }
     }
@@ -566,6 +590,8 @@ class FileFragment : Fragment() {
     }
 
     companion object {
+        private const val REQUEST_CHOOSE_FILE = 2
+
         @JvmStatic
         fun newInstance() =
             FileFragment().apply {
