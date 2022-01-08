@@ -1,7 +1,6 @@
 package com.example.speedcloud
 
 import android.app.Application
-import android.app.DownloadManager
 import androidx.room.Room
 import com.example.speedcloud.bean.User
 import com.example.speedcloud.database.SwapDatabase
@@ -16,13 +15,11 @@ class MainApplication : Application() {
     }
 
     var user: User? = null
-    lateinit var downloadManager: DownloadManager
     lateinit var swapDataBase: SwapDatabase
 
     override fun onCreate() {
         super.onCreate()
         mApp = this
-        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         swapDataBase =
             Room.databaseBuilder(
                 applicationContext,

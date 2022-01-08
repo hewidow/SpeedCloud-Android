@@ -1,5 +1,6 @@
 package com.example.speedcloud.util
 
+import android.app.Application
 import android.app.DownloadManager
 import android.net.Uri
 import android.os.Environment
@@ -10,12 +11,15 @@ import com.example.speedcloud.bean.SwapNode
 import java.util.*
 
 object DownloadManagerUtil {
+    private val downloadManager = MainApplication.getInstance()
+        .getSystemService(Application.DOWNLOAD_SERVICE) as DownloadManager
+
     /**
      * 根据id从DownloadManager中查询下载进度
      */
     fun getDownloadProgress(id: Long): Triple<Long, Long, Int> {
         val query = DownloadManager.Query().setFilterById(id)
-        MainApplication.getInstance().downloadManager.query(query)?.use { c ->
+        downloadManager.query(query)?.use { c ->
             if (c.moveToFirst()) {
                 return Triple(
                     c.getLong(c.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)),
@@ -48,10 +52,17 @@ object DownloadManagerUtil {
         request.setTitle("正在下载 ${node.nodeName}")
         request.setDescription("SpeedCloud")
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-        val id = MainApplication.getInstance().downloadManager.enqueue(request)
+        val id = downloadManager.enqueue(request)
         MainApplication.getInstance().swapDataBase.swapNodeDao()
             .insertAll(
                 SwapNode(0, false, Date(), 0, node.nodeName, id, 0, 0, 0)
             ) // 往数据库中插入下载记录
+    }
+
+    /**
+     * 移除下载任务
+     */
+    fun remove(task: Long) {
+        downloadManager.remove(task)
     }
 }

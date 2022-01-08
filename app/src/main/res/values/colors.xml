@@ -14,6 +14,8 @@
     <color name="statusBar">#FAFAFA</color>
     <color name="background_main">#FAFAFA</color>
     <color name="background_secondary">#EEEEEE</color>
+    <color name="background_third">#424242</color>
+    <color name="btn_secondary">#BDBDBD</color>
     <color name="text_main">#424242</color>
     <color name="text_secondary">#9E9E9E</color>
     <color name="icon_main">#424242</color>

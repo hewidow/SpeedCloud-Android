@@ -86,7 +86,7 @@ class ForgetFragment : Fragment() {
     }
 
     private fun showMessage(msg: String) {
-        Toast.makeText(this.activity, msg, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

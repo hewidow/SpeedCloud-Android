@@ -1,6 +1,7 @@
 package com.example.speedcloud.fragment
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
@@ -28,9 +29,11 @@ import com.example.speedcloud.adapter.RecyclerAdapter
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.bean.ShareLink
 import com.example.speedcloud.listener.RecyclerListener
+import com.example.speedcloud.util.DialogUtil
 import com.example.speedcloud.util.DownloadManagerUtil
 import com.example.speedcloud.util.HttpUtil
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +44,6 @@ import kotlin.math.abs
 
 
 class FileFragment : Fragment() {
-
 
     private lateinit var root: View
     private lateinit var appbar: AppBarLayout
@@ -65,6 +67,7 @@ class FileFragment : Fragment() {
     private lateinit var delete: Button
     private lateinit var rename: Button
     private lateinit var move: Button
+    private lateinit var floatingActionButton: FloatingActionButton
     private var nodes: ArrayList<Node> = ArrayList() // 需要展示的文件
     private var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
     private var selectedItem: ArrayList<Node> = ArrayList() // 选择的文件项下标
@@ -74,7 +77,7 @@ class FileFragment : Fragment() {
         arguments?.let {
         }
         backArrowDrawable =
-            ContextCompat.getDrawable(this.context!!, R.drawable.ic_baseline_arrow_back_ios_24)!!
+            ContextCompat.getDrawable(context!!, R.drawable.ic_baseline_arrow_back_ios_24)!!
         // 加入开始的根目录id
         backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0))
     }
@@ -95,7 +98,7 @@ class FileFragment : Fragment() {
         initAppbar()
         initRefresh()
         initRecycler()
-
+        initFloatingActionButton()
         return root
     }
 
@@ -143,15 +146,6 @@ class FileFragment : Fragment() {
             false
         )
         fileActionbarWindow.animationStyle = R.style.popup_window_top_bottom_anim
-    }
-
-    /**
-     * 设置背景透明度
-     */
-    private fun setBackgroundAlpha(alpha: Float) {
-        val lp = activity!!.window.attributes
-        lp.alpha = alpha
-        activity!!.window.attributes = lp
     }
 
     /**
@@ -236,15 +230,18 @@ class FileFragment : Fragment() {
                     val r = withContext(Dispatchers.IO) {
                         HttpUtil.post("deleteNode", Gson().toJson(selectedItem.map { it.nodeId }))
                     }
-                    Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
-                    refreshPath()
+                    if (r.success) {
+                        refreshPath()
+                    } else {
+                        Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
         rename.setOnClickListener {
             getSelectedItem()
-            val view = layoutInflater.inflate(R.layout.dialog_rename, null)
-            val name = view.findViewById<EditText>(R.id.name)
+            val view = layoutInflater.inflate(R.layout.dialog_edit_text, null)
+            val name = view.findViewById<EditText>(R.id.editText)
             val dialog = AlertDialog.Builder(context).setTitle("重命名").setView(view)
                 .setNegativeButton("取消") { dialog, _ ->
                     dialog.dismiss()
@@ -265,13 +262,14 @@ class FileFragment : Fragment() {
                         }
                         if (r.success) {
                             refreshPath()
-                            Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }.create()
             dialog.show()
+            dialog.getButton(Dialog.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(context!!, R.color.text_secondary))
             name.setText(selectedItem[0].nodeName)
             name.requestFocus() // 请求焦点
 //            (MainApplication.getInstance()
@@ -280,6 +278,28 @@ class FileFragment : Fragment() {
 //                InputMethodManager.SHOW_FORCED
 //            ) // 打开键盘
         }
+        move.setOnClickListener {
+            getSelectedItem()
+            val fragmentManager = activity!!.supportFragmentManager
+            val newFragment = SaveDialogFragment { id ->
+                back()
+                lifecycleScope.launch {
+                    val r = withContext(Dispatchers.IO) {
+                        HttpUtil.post(
+                            "moveNode", Gson().toJson(
+                                mapOf(
+                                    "dstNodeId" to id,
+                                    "srcNodeId" to selectedItem.map { it.nodeId }
+                                )
+                            )
+                        )
+                    }
+                    if (r.success) refreshPath()
+                    else Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
+                }
+            } // 确认移动后的回调
+            newFragment.show(fragmentManager, "moveDialog")
+        } // https://developer.android.google.cn/guide/topics/ui/dialogs?hl=zh-cn#DismissingADialog
         // 设置窗口大小
         fileToolbarWindow = PopupWindow(
             fileToolbarView,
@@ -318,6 +338,57 @@ class FileFragment : Fragment() {
     }
 
     /**
+     * 初始化新建文件夹和上传入口
+     */
+    private fun initFloatingActionButton() {
+        floatingActionButton = root.findViewById(R.id.floatingActionButton)
+        floatingActionButton.setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.dialog_add, null)
+            val dialog = AlertDialog.Builder(context).setView(view).create()
+            view.findViewById<TextView>(R.id.newFolder).setOnClickListener {
+                dialog.dismiss()
+                DialogUtil.showCreateFolderDialog(context!!) { name ->
+                    lifecycleScope.launch {
+                        val r = withContext(Dispatchers.IO) {
+                            HttpUtil.post(
+                                "createNode", Gson().toJson(
+                                    mapOf(
+                                        "nodeName" to name,
+                                        "parentId" to backStack.last().nodeId
+                                    )
+                                )
+                            )
+                        }
+                        if (r.success) {
+                            refreshPath()
+                        } else {
+                            Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+            view.findViewById<TextView>(R.id.upload).setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window!!.setGravity(Gravity.BOTTOM)
+            dialog.window!!.setWindowAnimations(R.style.popup_window_bottom_top_anim)
+            dialog.window!!.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            dialog.window!!.decorView.setPadding(0, 0, 0, 0)
+            dialog.window!!.decorView.setBackgroundColor(
+                ContextCompat.getColor(
+                    context!!,
+                    R.color.background_main
+                )
+            )
+        }
+    }
+
+    /**
      * 获取选中的列表项
      */
     private fun getSelectedItem() {
@@ -345,7 +416,7 @@ class FileFragment : Fragment() {
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_swap -> {
-                    startActivity(Intent(this.activity, SwapActivity::class.java))
+                    startActivity(Intent(activity, SwapActivity::class.java))
                 }
                 R.id.menu_search -> {
                     nestedScrollView.fullScroll(View.FOCUS_UP) //主体向上滚动
@@ -380,6 +451,7 @@ class FileFragment : Fragment() {
             fileToolbarWindow.showAsDropDown(root)
             fileActionbarWindow.showAtLocation(root, Gravity.START or Gravity.TOP, 0, 0)
             swipeRefresh.isEnabled = false
+            floatingActionButton.hide()
         }
     }
 
@@ -401,7 +473,7 @@ class FileFragment : Fragment() {
             share.isEnabled = (value > 0)
             delete.isEnabled = (value > 0)
             rename.isEnabled = (value == 1)
-            move.isEnabled = (value == 1)
+            move.isEnabled = (value >= 1)
             selectNumber.text = "已选中${value}个文件"
         }
     }
@@ -412,7 +484,7 @@ class FileFragment : Fragment() {
     private fun initRecycler() {
         recycler = root.findViewById(R.id.recycler)
         // 设置一个垂直方向的网格布局管理器
-        recycler.layoutManager = GridLayoutManager(this.activity, 1)
+        recycler.layoutManager = GridLayoutManager(context, 1)
         // 设置数据适配器
         adapter = RecyclerAdapter(nodes)
         // 设置点击监听器
@@ -465,7 +537,7 @@ class FileFragment : Fragment() {
                     ) // 转为文件数组
                 )
             } else {
-                showMessage(r.msg)
+                Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
             }
             nodes.sortByDescending { it.isDirectory }
             swipeRefresh.isRefreshing = false
@@ -484,16 +556,13 @@ class FileFragment : Fragment() {
             swipeRefresh.isEnabled = true
             fileToolbarWindow.dismiss()
             fileActionbarWindow.dismiss()
+            floatingActionButton.show()
             return true
         } // 处于select模式
         if (backStack.size <= 1) return false
         backStack.removeLast()
         refreshPath()
         return true
-    }
-
-    private fun showMessage(msg: String) {
-        Toast.makeText(this.activity, msg, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

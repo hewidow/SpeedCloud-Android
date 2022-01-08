@@ -62,7 +62,7 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
      * 底部弹出消息
      */
     private fun showMessage(msg: String) {
-        Toast.makeText(this.activity, msg, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -130,7 +130,7 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
     private fun startMainActivity() {
         startActivity(
             Intent(
-                this.activity,
+                activity,
                 MainActivity::class.java
             ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         )

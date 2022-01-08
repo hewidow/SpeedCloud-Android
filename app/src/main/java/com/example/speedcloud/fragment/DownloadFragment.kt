@@ -15,19 +15,20 @@ import com.example.speedcloud.adapter.SwapLoadingRecyclerAdapter
 import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.databinding.FragmentDownloadBinding
 import com.example.speedcloud.util.DownloadManagerUtil
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class DownloadFragment : Fragment() {
 
-    private lateinit var job: Job
     private val loadingNodes: ArrayList<SwapNode> = ArrayList()
     private val loadedNodes: ArrayList<SwapNode> = ArrayList()
     private lateinit var loadingAdapter: SwapLoadingRecyclerAdapter
     private lateinit var loadedAdapter: SwapLoadedRecyclerAdapter
     private lateinit var binding: FragmentDownloadBinding
     private var swapDataBase = MainApplication.getInstance().swapDataBase
-    private var downloadManager = MainApplication.getInstance().downloadManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,8 +86,8 @@ class DownloadFragment : Fragment() {
      */
     private fun initRecycler() {
         // 设置一个垂直方向的网格布局管理器
-        binding.rvLoading.layoutManager = GridLayoutManager(this.activity, 1)
-        binding.rvLoaded.layoutManager = GridLayoutManager(this.activity, 1)
+        binding.rvLoading.layoutManager = GridLayoutManager(context, 1)
+        binding.rvLoaded.layoutManager = GridLayoutManager(context, 1)
         // 设置数据适配器
         loadingAdapter = SwapLoadingRecyclerAdapter(loadingNodes)
         loadedAdapter = SwapLoadedRecyclerAdapter(loadedNodes)

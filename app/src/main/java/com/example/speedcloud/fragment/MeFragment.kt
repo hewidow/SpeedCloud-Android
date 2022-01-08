@@ -87,7 +87,7 @@ class MeFragment : Fragment() {
     private fun startAccountActivity() {
         startActivity(
             Intent(
-                this.activity,
+                activity,
                 AccountActivity::class.java
             ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         )
