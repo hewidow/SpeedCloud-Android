@@ -4,7 +4,6 @@
     android:layout_height="36dp"
     android:gravity="center"
     android:text="测试"
-    android:textColor="@color/black"
-    android:textSize="16sp">
+    android:textColor="@color/black">
 
 </TextView>

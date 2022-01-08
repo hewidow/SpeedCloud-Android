@@ -1,16 +1,13 @@
 package com.example.speedcloud.fragment
 
 import android.app.AlertDialog
-import android.app.DownloadManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -30,8 +27,8 @@ import com.example.speedcloud.SwapActivity
 import com.example.speedcloud.adapter.RecyclerAdapter
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.bean.ShareLink
-import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.listener.RecyclerListener
+import com.example.speedcloud.util.DownloadManagerUtil
 import com.example.speedcloud.util.HttpUtil
 import com.google.android.material.appbar.AppBarLayout
 import com.google.gson.Gson
@@ -168,7 +165,10 @@ class FileFragment : Fragment() {
         move = fileToolbarView.findViewById(R.id.move)
         download.setOnClickListener {
             getSelectedItem()
-            showDialog("确认下载", "将使用移动数据或WIFI进行下载") { startDownload() }
+            showDialog("确认下载", "将使用移动数据或WIFI进行下载") {
+                DownloadManagerUtil.request(selectedItem[0])
+                Toast.makeText(context, "开始下载...", Toast.LENGTH_SHORT).show()
+            }
         }
         share.setOnClickListener {
             getSelectedItem()
@@ -289,29 +289,6 @@ class FileFragment : Fragment() {
         )
         // 设置动画效果
         fileToolbarWindow.animationStyle = R.style.popup_window_bottom_top_anim
-    }
-
-    /**
-     * 开始下载任务
-     */
-    private fun startDownload() {
-        val token = MainApplication.getInstance().user?.token
-        val request =
-            DownloadManager.Request(Uri.parse("${getString(R.string.baseUrl)}download?token=${token}&nodeId=${selectedItem[0].nodeId}&online=0"))
-        request.setDestinationInExternalPublicDir(
-            DIRECTORY_DOWNLOADS,
-            selectedItem[0].nodeName
-        )
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-        request.setTitle("正在下载 ${selectedItem[0].nodeName}")
-        request.setDescription("SpeedCloud")
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-        val id = MainApplication.getInstance().downloadManager.enqueue(request)
-        MainApplication.getInstance().swapDataBase.swapNodeDao()
-            .insertAll(
-                SwapNode(0, false, Date(), 0, selectedItem[0].nodeName, id, 0, 0, 0)
-            ) // 往数据库中插入下载记录
-        Toast.makeText(context, "开始下载...", Toast.LENGTH_SHORT).show()
     }
 
     /**

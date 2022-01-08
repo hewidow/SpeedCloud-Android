@@ -17,8 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="有效期："
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textColor="@color/black" />
 
         <Spinner
             android:id="@+id/spinner"
@@ -45,7 +44,9 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="6dp"
                 android:text="复制链接"
+                android:textAlignment="center"
                 android:textColor="@color/black"
+                android:textSize="12sp"
                 app:drawableTopCompat="@drawable/button_share" />
         </LinearLayout>
     </HorizontalScrollView>

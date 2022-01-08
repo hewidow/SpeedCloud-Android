@@ -1,6 +1,5 @@
 package com.example.speedcloud.fragment
 
-import android.app.DownloadManager
 import android.os.Bundle
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.os.Environment.getExternalStoragePublicDirectory
@@ -15,6 +14,7 @@ import com.example.speedcloud.adapter.SwapLoadedRecyclerAdapter
 import com.example.speedcloud.adapter.SwapLoadingRecyclerAdapter
 import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.databinding.FragmentDownloadBinding
+import com.example.speedcloud.util.DownloadManagerUtil
 import kotlinx.coroutines.*
 
 
@@ -63,7 +63,7 @@ class DownloadFragment : Fragment() {
                     loadingNodes.addAll(swapDataBase.swapNodeDao().getAllLoadingByType(false))
                     loadedNodes.addAll(swapDataBase.swapNodeDao().getAllLoadedByType(false))
                     for (i in loadingNodes.indices) {
-                        val res = getDownloadProgress(loadingNodes[i].task)
+                        val res = DownloadManagerUtil.getDownloadProgress(loadingNodes[i].task)
                         loadingNodes[i].speed = res.first - loadingNodes[i].progress
                         loadingNodes[i].progress = res.first
                         loadingNodes[i].size = res.second
@@ -78,23 +78,6 @@ class DownloadFragment : Fragment() {
                 delay(1000) // 1秒更新一次
             }
         }
-    }
-
-    /**
-     * 根据id从DownloadManager中查询下载进度
-     */
-    private fun getDownloadProgress(id: Long): Triple<Long, Long, Int> {
-        val query = DownloadManager.Query().setFilterById(id)
-        downloadManager.query(query)?.use { c ->
-            if (c.moveToFirst()) {
-                return Triple(
-                    c.getLong(c.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)),
-                    c.getLong(c.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)),
-                    c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                )
-            }
-        }
-        return Triple(0, 0, 0)
     }
 
     /**

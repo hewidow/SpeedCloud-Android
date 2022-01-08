@@ -58,7 +58,7 @@ class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
                 .setPositiveButton("确定") { _, _ ->
                     MainApplication.getInstance().downloadManager.remove(nodes[position].task)
                     MainApplication.getInstance().swapDataBase.swapNodeDao()
-                        .deleteById(nodes[position].id)
+                        .deleteByTask(nodes[position].task)
                 }.setNegativeButton("取消") { dialog, _ ->
                     dialog.dismiss()
                 }.create().show()

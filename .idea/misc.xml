@@ -42,6 +42,7 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/ic_svg2.xml" value="0.1625" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/indicator_selected.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/progress_scale.xml" value="0.26564102564102565" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/radio_button_in.xml" value="0.159375" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/row_item_selector.xml" value="0.16822916666666668" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/shape_edit_focus.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/drawable/shape_edit_normal.xml" value="0.22314814814814815" />
@@ -80,7 +81,7 @@
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/item_swap_laoding.xml" value="0.2" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/popup_window_file_actionbar.xml" value="0.17481884057971014" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/popup_window_file_toolbar.xml" value="0.4" />
-        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/row_item_file.xml" value="0.4" />
+        <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/row_item_file.xml" value="0.264" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/row_item_swap.xml" value="0.11413043478260869" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/row_item_swap_laoding.xml" value="0.11413043478260869" />
         <entry key="..\:/Users/84496/Desktop/AndroidStudioProjects/SpeedCloud/app/src/main/res/layout/row_item_swap_loading.xml" value="0.4012738853503185" />

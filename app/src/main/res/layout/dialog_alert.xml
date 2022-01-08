@@ -66,7 +66,7 @@
             android:gravity="center"
             android:text="确认"
             android:textAlignment="gravity"
-            android:textColor="@color/blue_700"
+            android:textColor="@color/blue_500"
             android:textSize="18sp" />
     </LinearLayout>
 
