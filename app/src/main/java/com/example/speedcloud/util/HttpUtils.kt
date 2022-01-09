@@ -9,7 +9,7 @@ import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 
-object HttpUtil {
+object HttpUtils {
     data class Response(
         val code: Int,
         val msg: String,

@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.speedcloud.MainApplication
 
-object SharedUtil {
+object SharedUtils {
     // 声明一个共享参数的实例
-    private var mShared : SharedPreferences = MainApplication.getInstance().getSharedPreferences("share", Context.MODE_PRIVATE)
+    private var mShared: SharedPreferences =
+        MainApplication.getInstance().getSharedPreferences("share", Context.MODE_PRIVATE)
 
     /**
      * 把键名与字符串的配对信息写入共享参数

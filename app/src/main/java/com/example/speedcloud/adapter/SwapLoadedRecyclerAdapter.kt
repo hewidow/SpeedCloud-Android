@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.databinding.RowItemSwapBinding
-import com.example.speedcloud.util.FileUtil
+import com.example.speedcloud.util.FileUtils
 import java.text.SimpleDateFormat
 
 class SwapLoadedRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
@@ -25,7 +25,7 @@ class SwapLoadedRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nodeName.text = nodes[position].name
         holder.nodeInfo.text =
-            "${FileUtil.formatSize(nodes[position].size)}  ${
+            "${FileUtils.formatSize(nodes[position].size)}  ${
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
                     nodes[position].time
                 )

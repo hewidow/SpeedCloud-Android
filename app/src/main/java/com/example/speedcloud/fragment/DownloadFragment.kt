@@ -14,7 +14,7 @@ import com.example.speedcloud.adapter.SwapLoadedRecyclerAdapter
 import com.example.speedcloud.adapter.SwapLoadingRecyclerAdapter
 import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.databinding.FragmentDownloadBinding
-import com.example.speedcloud.util.DownloadManagerUtil
+import com.example.speedcloud.util.DownloadManagerUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -64,7 +64,7 @@ class DownloadFragment : Fragment() {
                     loadingNodes.addAll(swapDataBase.swapNodeDao().getAllLoadingByType(false))
                     loadedNodes.addAll(swapDataBase.swapNodeDao().getAllLoadedByType(false))
                     for (i in loadingNodes.indices) {
-                        val res = DownloadManagerUtil.getDownloadProgress(loadingNodes[i].task)
+                        val res = DownloadManagerUtils.getDownloadProgress(loadingNodes[i].task)
                         loadingNodes[i].speed = res.first - loadingNodes[i].progress
                         loadingNodes[i].progress = res.first
                         loadingNodes[i].size = res.second

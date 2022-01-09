@@ -19,7 +19,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.speedcloud.R
 
-object DialogUtil {
+object DialogUtils {
     /**
      * 创建新建文件夹对话框
      */

@@ -16,8 +16,8 @@ import com.example.speedcloud.MainApplication
 import com.example.speedcloud.R
 import com.example.speedcloud.bean.Result
 import com.example.speedcloud.bean.User
-import com.example.speedcloud.util.HttpUtil
-import com.example.speedcloud.util.SharedUtil
+import com.example.speedcloud.util.HttpUtils
+import com.example.speedcloud.util.SharedUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 
@@ -42,9 +42,9 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
         button.setOnClickListener { clickButton() }
 
         // 获取共享参数中的信息
-        val username = SharedUtil.readString("username", "")
-        val password = SharedUtil.readString("password", "")
-        val check = SharedUtil.readBoolean("autoLogin", false)
+        val username = SharedUtils.readString("username", "")
+        val password = SharedUtils.readString("password", "")
+        val check = SharedUtils.readBoolean("autoLogin", false)
 
         root.findViewById<EditText>(R.id.username).setText(username)
         root.findViewById<EditText>(R.id.password).setText(password)
@@ -74,15 +74,15 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
             // 请求开始，禁用按钮
             button.isEnabled = false
             // 将用户名和密码存入共享内存
-            SharedUtil.writeString(
+            SharedUtils.writeString(
                 "username",
                 root.findViewById<EditText>(R.id.username).text.toString()
             )
-            SharedUtil.writeString(
+            SharedUtils.writeString(
                 "password",
                 root.findViewById<EditText>(R.id.password).text.toString()
             )
-            SharedUtil.writeBoolean(
+            SharedUtils.writeBoolean(
                 "autoLogin",
                 root.findViewById<CheckBox>(R.id.autoLogin).isChecked
             )
@@ -113,7 +113,7 @@ class LoginFragment : Fragment(), CoroutineScope by MainScope() {
      * @return 用户信息和token
      */
     private fun login(username: String, password: String): Result {
-        return HttpUtil.post(
+        return HttpUtils.post(
             "login",
             Gson().toJson(
                 mapOf(

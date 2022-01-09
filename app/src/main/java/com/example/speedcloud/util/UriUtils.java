@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 
-public class UriUtil {
+public class UriUtils {
     public static String getFilePathFromURI(Context context, Uri contentUri) {
         File rootDataDir = context.getExternalFilesDir(null);
 //        MyApplication.getMyContext().getExternalFilesDir(null).getPath();

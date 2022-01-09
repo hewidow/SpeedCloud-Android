@@ -11,7 +11,7 @@ import com.example.speedcloud.bean.Node
 import com.example.speedcloud.databinding.RowItemSaveBinding
 import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.util.FileTypeUtils
-import com.example.speedcloud.util.FileUtil
+import com.example.speedcloud.util.FileUtils
 
 class SaveRecyclerAdapter(private var nodes: ArrayList<Node>) :
     RecyclerView.Adapter<SaveRecyclerAdapter.ViewHolder>() {
@@ -40,7 +40,7 @@ class SaveRecyclerAdapter(private var nodes: ArrayList<Node>) :
         // 设置文件名字和附属信息
         viewHolder.nodeName.text = nodes[position].nodeName
         var subTitle = nodes[position].createTime
-        if (!nodes[position].isDirectory) subTitle += "  ${FileUtil.formatSize(nodes[position].fileSize)}"
+        if (!nodes[position].isDirectory) subTitle += "  ${FileUtils.formatSize(nodes[position].fileSize)}"
         viewHolder.nodeInfo.text = subTitle
 
         // 设置点击列表项回调

@@ -12,9 +12,9 @@ import com.example.speedcloud.bean.FileType
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.databinding.FragmentDialogSaveBinding
 import com.example.speedcloud.listener.RecyclerListener
-import com.example.speedcloud.util.DialogUtil
-import com.example.speedcloud.util.FileUtil
-import com.example.speedcloud.util.HttpUtil
+import com.example.speedcloud.util.DialogUtils
+import com.example.speedcloud.util.FileUtils
+import com.example.speedcloud.util.HttpUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,10 +36,10 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
         binding = FragmentDialogSaveBinding.inflate(inflater, container, false)
 
         binding.btnNew.setOnClickListener {
-            DialogUtil.showCreateFolderDialog(context!!) { name ->
+            DialogUtils.showCreateFolderDialog(context!!) { name ->
                 lifecycleScope.launch {
                     val r = withContext(Dispatchers.IO) {
-                        HttpUtil.post(
+                        HttpUtils.post(
                             "createNode", Gson().toJson(
                                 mapOf(
                                     "nodeName" to name,
@@ -113,7 +113,7 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
             binding.empty.visibility = View.GONE
             binding.loading.visibility = View.VISIBLE
             val r = withContext(Dispatchers.IO) {
-                HttpUtil.get("queryChildren?nodeId=${node.nodeId}")
+                HttpUtils.get("queryChildren?nodeId=${node.nodeId}")
             }
             if (r.success) {
                 nodes.addAll(
@@ -130,7 +130,7 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
                 if (!nodes.last().isDirectory) nodes.removeLast()
                 else break
             }
-            FileUtil.formatData(nodes)
+            FileUtils.formatData(nodes)
             if (nodes.isEmpty()) binding.empty.visibility = View.VISIBLE
             binding.loading.visibility = View.GONE // 移除loading
             adapter.setItems(nodes)

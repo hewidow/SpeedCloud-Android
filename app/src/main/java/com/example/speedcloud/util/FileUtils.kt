@@ -4,7 +4,7 @@ import com.example.speedcloud.bean.FileType
 import com.example.speedcloud.bean.Node
 import java.text.DecimalFormat
 
-object FileUtil {
+object FileUtils {
     private val sizeText = arrayOf("B", "KB", "MB", "GB")
     private val df = DecimalFormat("0.00")
 

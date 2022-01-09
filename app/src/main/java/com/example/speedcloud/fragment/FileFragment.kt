@@ -161,7 +161,7 @@ class FileFragment : Fragment() {
         download.setOnClickListener {
             getSelectedItem()
             showDialog("确认下载", "将使用移动数据或WIFI进行下载") {
-                DownloadManagerUtil.request(selectedItem[0])
+                DownloadManagerUtils.request(selectedItem[0])
                 Toast.makeText(context, "开始下载...", Toast.LENGTH_SHORT).show()
             }
         }
@@ -184,7 +184,7 @@ class FileFragment : Fragment() {
                 back()
                 lifecycleScope.launch {
                     val r = withContext(Dispatchers.IO) {
-                        HttpUtil.post(
+                        HttpUtils.post(
                             "share", Gson().toJson(
                                 mapOf(
                                     "srcNodeIds" to selectedItem.map { it.nodeId },
@@ -229,7 +229,7 @@ class FileFragment : Fragment() {
             showDialog("删除文件", "10天内可在回收站中找回已删文件") {
                 lifecycleScope.launch {
                     val r = withContext(Dispatchers.IO) {
-                        HttpUtil.post("deleteNode", Gson().toJson(selectedItem.map { it.nodeId }))
+                        HttpUtils.post("deleteNode", Gson().toJson(selectedItem.map { it.nodeId }))
                     }
                     if (r.success) {
                         refreshPath()
@@ -252,7 +252,7 @@ class FileFragment : Fragment() {
                     back()
                     lifecycleScope.launch {
                         val r = withContext(Dispatchers.IO) {
-                            HttpUtil.post(
+                            HttpUtils.post(
                                 "renameNode", Gson().toJson(
                                     mapOf(
                                         "newName" to name.text.toString(),
@@ -286,7 +286,7 @@ class FileFragment : Fragment() {
                 back()
                 lifecycleScope.launch {
                     val r = withContext(Dispatchers.IO) {
-                        HttpUtil.post(
+                        HttpUtils.post(
                             "moveNode", Gson().toJson(
                                 mapOf(
                                     "dstNodeId" to id,
@@ -348,10 +348,10 @@ class FileFragment : Fragment() {
             val dialog = AlertDialog.Builder(context).setView(view).create()
             view.findViewById<TextView>(R.id.newFolder).setOnClickListener {
                 dialog.dismiss()
-                DialogUtil.showCreateFolderDialog(context!!) { name ->
+                DialogUtils.showCreateFolderDialog(context!!) { name ->
                     lifecycleScope.launch {
                         val r = withContext(Dispatchers.IO) {
-                            HttpUtil.post(
+                            HttpUtils.post(
                                 "createNode", Gson().toJson(
                                     mapOf(
                                         "nodeName" to name,
@@ -405,7 +405,7 @@ class FileFragment : Fragment() {
      * 上传文件
      */
     private fun upload(uri: Uri) {
-        val path = UriUtil.getFileAbsolutePath(context, uri)
+        val path = UriUtils.getFileAbsolutePath(context, uri)
         val file = File(path)
         Log.d("hgf", "${file.path} ${file.name} ${file.length()}")
     }
@@ -461,7 +461,7 @@ class FileFragment : Fragment() {
             if (nodes[position].isDirectory) { // 是文件夹
                 refreshPath(arrayListOf(nodes[position]))
             } else if (nodes[position].nodeName.contains(Regex("\\.png|\\.jpg|\\.jpeg|\\.gif"))) { // 是图片
-                DialogUtil.showImage(
+                DialogUtils.showImage(
                     context!!,
                     "${getString(R.string.api)}download?token=${MainApplication.getInstance().user!!.token}&nodeId=${nodes[position].nodeId}&online=1"
                 )
@@ -559,7 +559,7 @@ class FileFragment : Fragment() {
                 loading.visibility = View.VISIBLE
             } // 如果没有下拉刷新就显示loading
             val r = withContext(Dispatchers.IO) {
-                HttpUtil.get("queryChildren?nodeId=${node.nodeId}")
+                HttpUtils.get("queryChildren?nodeId=${node.nodeId}")
             }
             if (r.success) {
                 nodes.addAll(
@@ -571,7 +571,7 @@ class FileFragment : Fragment() {
             } else {
                 Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
             }
-            FileUtil.formatData(nodes)
+            FileUtils.formatData(nodes)
             nodes.sortByDescending { it.isDirectory }
             swipeRefresh.isRefreshing = false
             loading.visibility = View.GONE // 移除loading

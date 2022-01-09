@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.MainApplication
 import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.databinding.RowItemSwapLoadingBinding
-import com.example.speedcloud.util.DownloadManagerUtil
-import com.example.speedcloud.util.FileUtil
+import com.example.speedcloud.util.DownloadManagerUtils
+import com.example.speedcloud.util.FileUtils
 
 class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
     RecyclerView.Adapter<SwapLoadingRecyclerAdapter.ViewHolder>() {
@@ -39,13 +39,13 @@ class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
         holder.nodeName.text = nodes[position].name
         if (nodes[position].state == DownloadManager.STATUS_RUNNING || nodes[position].state == DownloadManager.STATUS_PAUSED) {
             holder.nodeSize.text =
-                "${FileUtil.formatSize(nodes[position].progress)}/${FileUtil.formatSize(nodes[position].size)}"
-            holder.speed.text = "${FileUtil.formatSize(nodes[position].speed)}/s"
+                "${FileUtils.formatSize(nodes[position].progress)}/${FileUtils.formatSize(nodes[position].size)}"
+            holder.speed.text = "${FileUtils.formatSize(nodes[position].speed)}/s"
             holder.progressBar.progress =
                 (nodes[position].progress * 100 / nodes[position].size).toInt()
         } else {
             holder.nodeSize.text =
-                "${FileUtil.formatSize(nodes[position].size)}"
+                "${FileUtils.formatSize(nodes[position].size)}"
             holder.speed.text = "正在等待"
             holder.progressBar.progress = 0
         }
@@ -57,7 +57,7 @@ class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
         holder.swapCancel.setOnClickListener {
             AlertDialog.Builder(holder.itemView.context).setTitle("确定取消")
                 .setPositiveButton("确定") { _, _ ->
-                    DownloadManagerUtil.remove(nodes[position].task)
+                    DownloadManagerUtils.remove(nodes[position].task)
                     MainApplication.getInstance().swapDataBase.swapNodeDao()
                         .deleteByTask(nodes[position].task)
                 }.setNegativeButton("取消") { dialog, _ ->

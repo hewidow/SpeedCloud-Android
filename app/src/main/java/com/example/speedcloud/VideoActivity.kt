@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.bean.PlayUrl
 import com.example.speedcloud.databinding.ActivityVideoBinding
-import com.example.speedcloud.util.HttpUtil
+import com.example.speedcloud.util.HttpUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class VideoActivity : AppCompatActivity() {
         lifecycleScope.launch {
             binding.loading.visibility = View.VISIBLE
             val r = withContext(Dispatchers.IO) {
-                HttpUtil.get("playVideo?nodeId=${node.nodeId}")
+                HttpUtils.get("playVideo?nodeId=${node.nodeId}")
             }
             if (r.success) {
                 val url = Gson().fromJson(r.msg, PlayUrl::class.java).url

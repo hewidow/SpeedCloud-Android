@@ -15,9 +15,9 @@ import com.example.speedcloud.MainApplication
 import com.example.speedcloud.R
 import com.example.speedcloud.bean.User
 import com.example.speedcloud.bean.UserDetail
-import com.example.speedcloud.util.FileUtil
-import com.example.speedcloud.util.HttpUtil
-import com.example.speedcloud.util.SharedUtil
+import com.example.speedcloud.util.FileUtils
+import com.example.speedcloud.util.HttpUtils
+import com.example.speedcloud.util.SharedUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,9 +45,9 @@ class MeFragment : Fragment() {
         logout = root.findViewById(R.id.logout)
         logout.setOnClickListener {
             lifecycleScope.launch {
-                SharedUtil.writeBoolean("autoLogin", false)
+                SharedUtils.writeBoolean("autoLogin", false)
                 val r = withContext(Dispatchers.IO) {
-                    HttpUtil.get("/logout")
+                    HttpUtils.get("/logout")
                 }
                 startAccountActivity()
             }
@@ -74,8 +74,8 @@ class MeFragment : Fragment() {
      * 获取存储空间文本
      */
     private fun getStorageText(): String {
-        return "${FileUtil.formatSize(user.userDetail.totalSize - user.userDetail.availableSize)} / ${
-            FileUtil.formatSize(
+        return "${FileUtils.formatSize(user.userDetail.totalSize - user.userDetail.availableSize)} / ${
+            FileUtils.formatSize(
                 user.userDetail.totalSize
             )
         }"
@@ -100,7 +100,7 @@ class MeFragment : Fragment() {
         super.onResume()
         lifecycleScope.launch {
             val r = withContext(Dispatchers.IO) {
-                HttpUtil.get("me")
+                HttpUtils.get("me")
             }
             if (r.success) {
                 MainApplication.getInstance().user?.userDetail =

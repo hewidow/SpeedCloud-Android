@@ -13,7 +13,7 @@ import com.example.speedcloud.R
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.util.FileTypeUtils
-import com.example.speedcloud.util.FileUtil
+import com.example.speedcloud.util.FileUtils
 
 class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
@@ -63,7 +63,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
         // 设置文件名字和附属信息
         viewHolder.nodeName.text = nodes[position].nodeName
         var subTitle = nodes[position].createTime
-        if (!nodes[position].isDirectory) subTitle += "  ${FileUtil.formatSize(nodes[position].fileSize)}"
+        if (!nodes[position].isDirectory) subTitle += "  ${FileUtils.formatSize(nodes[position].fileSize)}"
         viewHolder.nodeInfo.text = subTitle
 
         // 根据是否处于编辑模式绑定相应的监听事件

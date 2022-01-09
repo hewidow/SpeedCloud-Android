@@ -10,7 +10,7 @@ import com.example.speedcloud.bean.Node
 import com.example.speedcloud.bean.SwapNode
 import java.util.*
 
-object DownloadManagerUtil {
+object DownloadManagerUtils {
     private val downloadManager = MainApplication.getInstance()
         .getSystemService(Application.DOWNLOAD_SERVICE) as DownloadManager
 

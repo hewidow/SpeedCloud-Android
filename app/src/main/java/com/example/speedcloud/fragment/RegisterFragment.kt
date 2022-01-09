@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.speedcloud.R
-import com.example.speedcloud.util.HttpUtil
+import com.example.speedcloud.util.HttpUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class RegisterFragment : Fragment() {
             lifecycleScope.launch {
                 sendCode.isEnabled = false
                 val r = withContext(Dispatchers.IO) {
-                    HttpUtil.post(
+                    HttpUtils.post(
                         "checkCode",
                         Gson().toJson(
                             mapOf(
@@ -62,7 +62,7 @@ class RegisterFragment : Fragment() {
             lifecycleScope.launch {
                 register.isEnabled = false
                 val r = withContext(Dispatchers.IO) {
-                    HttpUtil.post(
+                    HttpUtils.post(
                         "register",
                         Gson().toJson(
                             mapOf(
