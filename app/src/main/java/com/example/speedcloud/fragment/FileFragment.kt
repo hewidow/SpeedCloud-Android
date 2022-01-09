@@ -111,7 +111,7 @@ class FileFragment : Fragment() {
 
         // 设置刷新颜色
         swipeRefresh.setColorSchemeResources(
-            R.color.blue_500, R.color.blue_700
+            R.color.primary, R.color.primary_variant
         )
         // 设置下拉刷新监听器
         swipeRefresh.setOnRefreshListener {
@@ -385,7 +385,7 @@ class FileFragment : Fragment() {
             dialog.window!!.decorView.setBackgroundColor(
                 ContextCompat.getColor(
                     context!!,
-                    R.color.background_main
+                    R.color.background_primary
                 )
             )
         }

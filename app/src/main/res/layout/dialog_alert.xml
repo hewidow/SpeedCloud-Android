@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
-        android:backgroundTint="@color/text_main" />
+        android:backgroundTint="@color/text_primary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:background="?android:attr/listDivider"
-            android:backgroundTint="@color/text_main" />
+            android:backgroundTint="@color/text_primary" />
 
 
         <TextView
@@ -65,7 +65,7 @@
             android:gravity="center"
             android:text="确认"
             android:textAlignment="gravity"
-            android:textColor="@color/blue_500" />
+            android:textColor="@color/primary" />
     </LinearLayout>
 
 </LinearLayout>

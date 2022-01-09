@@ -39,7 +39,7 @@ class AccountActivity : AppCompatActivity() {
         )
         setFragment(FragmentType.LOGIN)
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.blue_500) // 设置状态栏颜色
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primary) // 设置状态栏颜色
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE // 设置暗色字体
     }
 

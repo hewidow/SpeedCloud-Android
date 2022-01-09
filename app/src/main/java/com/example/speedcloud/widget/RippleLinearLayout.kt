@@ -105,7 +105,7 @@ class RippleLinearLayout : LinearLayout {
         startX = drawOneRipple(
             canvas,
             startX,
-            ContextCompat.getColor(mContext, R.color.ripple),
+            ContextCompat.getColor(mContext, R.color.water_ripple_secondary),
             30F,
             300F,
             30F
@@ -113,7 +113,7 @@ class RippleLinearLayout : LinearLayout {
         startX2 = drawOneRipple(
             canvas,
             startX2,
-            ContextCompat.getColor(mContext, R.color.ripple2),
+            ContextCompat.getColor(mContext, R.color.white),
             20F,
             200F,
             20F

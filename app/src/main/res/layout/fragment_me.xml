@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_main"
+        android:background="@color/background_primary"
         android:orientation="vertical"
         android:padding="25dp">
 
@@ -23,7 +23,7 @@
                 android:id="@+id/imageFilterView"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@color/blue_500"
+                android:background="@color/primary"
                 android:padding="6dp"
                 android:tint="#FFFFFF"
                 app:roundPercent="1"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:text="username"
-                android:textColor="@color/text_main"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -59,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="存储空间"
-                    android:textColor="@color/text_main" />
+                    android:textColor="@color/text_primary" />
 
                 <ProgressBar
                     android:id="@+id/pb_storage"
@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="1GB / 10GB"
-                    android:textColor="@color/text_main" />
+                    android:textColor="@color/text_primary" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-<!--    selected在pressed之前可以让取消勾选时只匹配selected状态-->
+    <!--    selected在pressed之前可以让取消勾选时只匹配selected状态-->
     <item android:state_selected="true" android:drawable="@color/row_item_selected" />
     <item android:state_pressed="true" android:drawable="@color/row_item_pressed" />
-    <item android:drawable="@color/background_main" />
+    <item android:drawable="@color/background_primary" />
 </selector>

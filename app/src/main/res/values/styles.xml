@@ -2,7 +2,7 @@
 <resources>
 
     <style name="toolbar">
-        <item name="colorControlNormal">@color/icon_main</item>
+        <item name="colorControlNormal">@color/icon_primary</item>
     </style>
 
     <style name="popup_window_bottom_top_anim">
