@@ -31,6 +31,7 @@ import com.example.speedcloud.bean.FileType
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.bean.ShareLink
 import com.example.speedcloud.listener.RecyclerListener
+import com.example.speedcloud.service.UploadService
 import com.example.speedcloud.util.*
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -406,6 +407,10 @@ class FileFragment : Fragment() {
      */
     private fun upload(uri: Uri) {
         val path = UriUtils.getFileAbsolutePath(context, uri)
+        Intent(
+            context,
+            UploadService::class.java
+        ).also { intent -> activity!!.startService(intent) }
         val file = File(path)
         Log.d("hgf", "${file.path} ${file.name} ${file.length()}")
     }

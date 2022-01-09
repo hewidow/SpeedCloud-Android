@@ -26,15 +26,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:singleLine="true"
             android:text="filename"
             android:textColor="@color/text_primary"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/nodeInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:singleLine="true"
             android:text="2022-1-1 00:00:00  66.66MB"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
