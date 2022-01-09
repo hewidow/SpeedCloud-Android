@@ -1,5 +1,6 @@
 package com.example.speedcloud.bean
 
+
 /**
  * 文件节点
  */
@@ -11,5 +12,6 @@ data class Node(
     val isDirectory: Boolean,
     val nodeId: Int,
     val nodeName: String,
-    val parentId: Int
+    val parentId: Int,
+    var type: FileType
 )

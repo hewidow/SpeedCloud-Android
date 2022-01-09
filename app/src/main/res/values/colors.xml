@@ -20,6 +20,8 @@
     <color name="icon_primary">#424242</color>
     <color name="icon_secondary">#BDBDBD</color>
     <color name="icon_folder">#FFC107</color>
+    <color name="icon_video">#03A9F4</color>
+    <color name="icon_image">#4CAF50</color>
     <color name="icon_file">#676767</color>
     <color name="row_item_pressed">#BFEEEEEE</color>
     <color name="row_item_selected">#4090CAF9</color>

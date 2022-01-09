@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.speedcloud.*
 import com.example.speedcloud.adapter.RecyclerAdapter
+import com.example.speedcloud.bean.FileType
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.bean.ShareLink
 import com.example.speedcloud.listener.RecyclerListener
@@ -79,7 +80,7 @@ class FileFragment : Fragment() {
         backArrowDrawable =
             ContextCompat.getDrawable(context!!, R.drawable.ic_baseline_arrow_back_ios_24)!!
         // 加入开始的根目录id
-        backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0))
+        backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0, FileType.DIRECTORY))
     }
 
     override fun onCreateView(
@@ -459,10 +460,17 @@ class FileFragment : Fragment() {
         override fun onItemClick(view: View, position: Int) {
             if (nodes[position].isDirectory) { // 是文件夹
                 refreshPath(arrayListOf(nodes[position]))
-            } else {
+            } else if (nodes[position].nodeName.contains(Regex("\\.png|\\.jpg|\\.jpeg|\\.gif"))) { // 是图片
+                DialogUtil.showImage(
+                    context!!,
+                    "${getString(R.string.api)}download?token=${MainApplication.getInstance().user!!.token}&nodeId=${nodes[position].nodeId}&online=1"
+                )
+            } else if (nodes[position].nodeName.contains(".mp4")) { // 是视频
                 val intent = Intent(context, VideoActivity::class.java)
                 intent.putExtra("node", Gson().toJson(nodes[position]))
                 startActivity(intent)
+            } else {
+                Toast.makeText(context, "暂不支持在线查看", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -563,6 +571,7 @@ class FileFragment : Fragment() {
             } else {
                 Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
             }
+            FileUtil.formatData(nodes)
             nodes.sortByDescending { it.isDirectory }
             swipeRefresh.isRefreshing = false
             loading.visibility = View.GONE // 移除loading

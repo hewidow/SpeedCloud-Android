@@ -1,7 +1,6 @@
 package com.example.speedcloud.adapter
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +8,11 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.R
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.listener.RecyclerListener
+import com.example.speedcloud.util.FileTypeUtils
 import com.example.speedcloud.util.FileUtil
 
 class RecyclerAdapter(private var nodes: ArrayList<Node>) :
@@ -31,10 +30,6 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
             field = value
             onSelectedItemNumberChangeListener?.onSelectedItemNumberChange(value)
         }
-    private lateinit var iconFolder: Drawable
-    private var iconFolderColor: Int = 0
-    private lateinit var iconFile: Drawable
-    private var iconFileColor: Int = 0
 
     // 根据布局绑定控件
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -52,14 +47,7 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(viewGroup.context).inflate(R.layout.row_item_file, viewGroup, false)
-        iconFolder =
-            ContextCompat.getDrawable(viewGroup.context, R.drawable.ic_baseline_folder_24)!!
-        iconFolderColor = ContextCompat.getColor(viewGroup.context, R.color.icon_folder)
-        iconFile = ContextCompat.getDrawable(
-            viewGroup.context,
-            R.drawable.ic_baseline_insert_drive_file_24
-        )!!
-        iconFileColor = ContextCompat.getColor(viewGroup.context, R.color.icon_file)
+
         return ViewHolder(view)
     }
 
@@ -68,13 +56,9 @@ class RecyclerAdapter(private var nodes: ArrayList<Node>) :
      */
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // 为不同类型的文件设置相应的图标和颜色
-        if (nodes[position].isDirectory) {
-            viewHolder.icon.setImageDrawable(iconFolder) // 设置图标
-            viewHolder.icon.setColorFilter(iconFolderColor) // 设置颜色
-        } else {
-            viewHolder.icon.setImageDrawable(iconFile)
-            viewHolder.icon.setColorFilter(iconFileColor)
-        }
+        val icon = FileTypeUtils.getIconDrawableAndColor(nodes[position].type)
+        viewHolder.icon.setImageDrawable(icon.first) // 设置图标
+        viewHolder.icon.setColorFilter(icon.second) // 设置颜色
 
         // 设置文件名字和附属信息
         viewHolder.nodeName.text = nodes[position].nodeName

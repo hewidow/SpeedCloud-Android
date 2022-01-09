@@ -8,10 +8,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.speedcloud.adapter.SaveRecyclerAdapter
+import com.example.speedcloud.bean.FileType
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.databinding.FragmentDialogSaveBinding
 import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.util.DialogUtil
+import com.example.speedcloud.util.FileUtil
 import com.example.speedcloud.util.HttpUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -67,7 +69,7 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
             }
         }
         binding.rvSave.adapter = adapter
-        backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0))
+        backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0, FileType.DIRECTORY))
         refreshPath()
         return binding.root
     }
@@ -128,6 +130,7 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
                 if (!nodes.last().isDirectory) nodes.removeLast()
                 else break
             }
+            FileUtil.formatData(nodes)
             if (nodes.isEmpty()) binding.empty.visibility = View.VISIBLE
             binding.loading.visibility = View.GONE // 移除loading
             adapter.setItems(nodes)
