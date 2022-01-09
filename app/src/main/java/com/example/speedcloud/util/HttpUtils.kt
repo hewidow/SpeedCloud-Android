@@ -37,7 +37,7 @@ object HttpUtils {
             conn.doInput = true
             conn.useCaches = false
             conn.setRequestProperty("Connection", "Keep-Alive")
-            conn.setRequestProperty("accept", "application/json")
+            conn.setRequestProperty("Accept", "application/json")
             conn.setRequestProperty("token", MainApplication.getInstance().user?.token ?: "")
             conn.connectTimeout = 5000
 
@@ -71,7 +71,7 @@ object HttpUtils {
             }
 
             // 根据状态码返回响应结果
-            if (conn.responseCode == 200) {
+            if (conn.responseCode == HttpURLConnection.HTTP_OK) {
                 return Result(true, msg)
             }
             return Result(false, msg)

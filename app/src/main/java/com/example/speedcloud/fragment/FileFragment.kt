@@ -39,7 +39,6 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -410,9 +409,10 @@ class FileFragment : Fragment() {
         Intent(
             context,
             UploadService::class.java
-        ).also { intent -> activity!!.startService(intent) }
-        val file = File(path)
-        Log.d("hgf", "${file.path} ${file.name} ${file.length()}")
+        ).also { intent ->
+            intent.putExtra("path", path)
+            activity!!.startService(intent)
+        }
     }
 
     /**

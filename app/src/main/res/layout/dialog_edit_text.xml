@@ -10,5 +10,6 @@
         android:layout_gravity="center"
         android:layout_margin="20dp"
         android:background="@drawable/edit_text_selector"
-        android:padding="6dp" />
+        android:padding="6dp"
+        android:singleLine="true" />
 </FrameLayout>

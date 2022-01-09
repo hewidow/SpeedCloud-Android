@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="6dp"
     tools:context=".fragment.UploadFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -20,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="6dp"
-                android:text="正在上传"
+                android:text="正在上传（0）"
                 android:textSize="16sp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -35,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="6dp"
-                android:text="上传完成"
+                android:text="上传完成（0）"
                 android:textSize="16sp" />
 
             <androidx.recyclerview.widget.RecyclerView

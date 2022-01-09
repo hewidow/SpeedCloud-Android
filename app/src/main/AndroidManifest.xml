@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SpeedCloud"
         android:usesCleartextTraffic="true">
+        <service android:name=".service.UploadService" />
         <activity
             android:name=".VideoActivity"
             android:exported="true"
