@@ -16,7 +16,7 @@ object HttpUtil {
         val data: Any
     )
 
-    private var baseUrl = MainApplication.getInstance().getString(R.string.baseUrl) // 根地址
+    private var api = MainApplication.getInstance().getString(R.string.api) // 根地址
 
     /**
      * 使用HttpURLConnection以Json的方式进行请求
@@ -25,7 +25,7 @@ object HttpUtil {
      * @param data Json数据
      */
     private fun request(requestMethod: String, path: String, data: String): Result {
-        val url = baseUrl + path
+        val url = api + path
         Log.d("http:$requestMethod", "url:$url request:$data")
         var conn: HttpURLConnection? = null
         val bt = data.toByteArray()

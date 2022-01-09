@@ -48,6 +48,11 @@ class VideoActivity : AppCompatActivity() {
                 binding.videoView.setOnPreparedListener {
                     binding.loading.visibility = View.GONE
                 }
+                binding.videoView.setOnErrorListener { _, _, _ ->
+                    Toast.makeText(this@VideoActivity, "无法播放", Toast.LENGTH_SHORT).show()
+                    finish()
+                    true
+                }
                 mediaController = MediaController(this@VideoActivity)
                 binding.videoView.setMediaController(mediaController)
                 mediaController.setMediaPlayer(binding.videoView)

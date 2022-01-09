@@ -40,7 +40,7 @@ object DownloadManagerUtil {
             DownloadManager.Request(
                 Uri.parse(
                     "${
-                        MainApplication.getInstance().getString(R.string.baseUrl)
+                        MainApplication.getInstance().getString(R.string.api)
                     }download?token=${token}&nodeId=${node.nodeId}&online=0"
                 )
             )
