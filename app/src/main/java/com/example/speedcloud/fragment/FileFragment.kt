@@ -7,7 +7,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -34,6 +33,7 @@ import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.service.UploadService
 import com.example.speedcloud.util.*
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -160,7 +160,8 @@ class FileFragment : Fragment() {
         move = fileToolbarView.findViewById(R.id.move)
         download.setOnClickListener {
             getSelectedItem()
-            showDialog("确认下载", "将使用移动数据或WIFI进行下载") {
+            DialogUtils.showAlertDialog(context!!, "确认下载", "将使用移动数据或WIFI进行下载") {
+                back()
                 DownloadManagerUtils.request(selectedItem[0])
                 Toast.makeText(context, "开始下载...", Toast.LENGTH_SHORT).show()
             }
@@ -226,7 +227,8 @@ class FileFragment : Fragment() {
         }
         delete.setOnClickListener {
             getSelectedItem()
-            showDialog("删除文件", "10天内可在回收站中找回已删文件") {
+            DialogUtils.showAlertDialog(context!!, "删除文件", "10天内可在回收站中找回已删文件") {
+                back()
                 lifecycleScope.launch {
                     val r = withContext(Dispatchers.IO) {
                         HttpUtils.post("deleteNode", Gson().toJson(selectedItem.map { it.nodeId }))
@@ -313,39 +315,14 @@ class FileFragment : Fragment() {
     }
 
     /**
-     * 生成对话框
-     */
-    private fun showDialog(title: String, message: String, onClickListener: View.OnClickListener) {
-        val builder = AlertDialog.Builder(context)
-        val view = layoutInflater.inflate(R.layout.dialog_alert, null)
-        val dialog = builder.setCancelable(false).setView(view).create()
-        view.findViewById<TextView>(R.id.title).text = title
-        view.findViewById<TextView>(R.id.message).text = message
-        view.findViewById<TextView>(R.id.cancel).setOnClickListener { dialog.dismiss() }
-        view.findViewById<TextView>(R.id.confirm).setOnClickListener {
-            dialog.dismiss()
-            back()
-            onClickListener.onClick(it)
-        }
-        dialog.show()
-        val displayRectangle = Rect()
-        activity!!.window.decorView.getWindowVisibleDisplayFrame(displayRectangle)
-        dialog.window!!.setLayout(
-            (displayRectangle.width() * 0.75).toInt(),
-            dialog.window!!.attributes.height
-        )
-        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
-
-    }
-
-    /**
      * 初始化新建文件夹和上传入口
      */
     private fun initFloatingActionButton() {
         floatingActionButton = root.findViewById(R.id.floatingActionButton)
         floatingActionButton.setOnClickListener {
             val view = layoutInflater.inflate(R.layout.dialog_add, null)
-            val dialog = AlertDialog.Builder(context).setView(view).create()
+            val dialog = BottomSheetDialog(context!!, R.style.BottomSheetDialog)
+            dialog.setContentView(view)
             view.findViewById<TextView>(R.id.newFolder).setOnClickListener {
                 dialog.dismiss()
                 DialogUtils.showCreateFolderDialog(context!!) { name ->
@@ -376,19 +353,6 @@ class FileFragment : Fragment() {
                 startActivityForResult(intent, REQUEST_CHOOSE_FILE)
             } // 打开系统自带的文件浏览器
             dialog.show()
-            dialog.window!!.setGravity(Gravity.BOTTOM)
-            dialog.window!!.setWindowAnimations(R.style.popup_window_bottom_top_anim)
-            dialog.window!!.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            dialog.window!!.decorView.setPadding(0, 0, 0, 0)
-            dialog.window!!.decorView.setBackgroundColor(
-                ContextCompat.getColor(
-                    context!!,
-                    R.color.background_primary
-                )
-            )
         }
     }
 
@@ -463,19 +427,24 @@ class FileFragment : Fragment() {
      */
     inner class MyOnItemClickListener : RecyclerListener.OnItemClickListener {
         override fun onItemClick(view: View, position: Int) {
-            if (nodes[position].isDirectory) { // 是文件夹
-                refreshPath(arrayListOf(nodes[position]))
-            } else if (nodes[position].nodeName.contains(Regex("\\.png|\\.jpg|\\.jpeg|\\.gif"))) { // 是图片
-                DialogUtils.showImage(
-                    context!!,
-                    "${getString(R.string.api)}download?token=${MainApplication.getInstance().user!!.token}&nodeId=${nodes[position].nodeId}&online=1"
-                )
-            } else if (nodes[position].nodeName.contains(".mp4")) { // 是视频
-                val intent = Intent(context, VideoActivity::class.java)
-                intent.putExtra("node", Gson().toJson(nodes[position]))
-                startActivity(intent)
-            } else {
-                Toast.makeText(context, "暂不支持在线查看", Toast.LENGTH_SHORT).show()
+            when (nodes[position].type) {
+                FileType.DIRECTORY -> { // 是文件夹
+                    refreshPath(arrayListOf(nodes[position]))
+                }
+                FileType.VIDEO -> {
+                    val intent = Intent(context, VideoActivity::class.java)
+                    intent.putExtra("node", Gson().toJson(nodes[position]))
+                    startActivity(intent)
+                }
+                FileType.IMAGE -> {
+                    DialogUtils.showImage(
+                        context!!,
+                        "${getString(R.string.api)}download?token=${MainApplication.getInstance().user!!.token}&nodeId=${nodes[position].nodeId}&online=1"
+                    )
+                }
+                else -> {
+                    Toast.makeText(context, "暂不支持在线查看", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -485,10 +454,10 @@ class FileFragment : Fragment() {
      */
     inner class MyOnItemLongClickListener : RecyclerListener.OnItemLongClickListener {
         override fun onItemLongClick(view: View, position: Int) {
-            fileToolbarWindow.showAsDropDown(root)
-            fileActionbarWindow.showAtLocation(root, Gravity.START or Gravity.TOP, 0, 0)
-            swipeRefresh.isEnabled = false
-            floatingActionButton.hide()
+            fileToolbarWindow.showAsDropDown(root) // 显示底部工具栏
+            fileActionbarWindow.showAtLocation(root, Gravity.START or Gravity.TOP, 0, 0) // 显示顶部操作栏
+            swipeRefresh.isEnabled = false // 隐藏下拉刷新
+            floatingActionButton.hide() // 隐藏右下角新建按钮
         }
     }
 
@@ -559,7 +528,7 @@ class FileFragment : Fragment() {
                 toolbar.navigationIcon = backArrowDrawable
             } // 看是否是根目录设置是否有返回键
             nodes.clear() // 清空之前的文件
-            adapter.setItems(nodes) // 设置数据
+            adapter.changeAllItems() // 设置数据
             if (!swipeRefresh.isRefreshing) {
                 loading.visibility = View.VISIBLE
             } // 如果没有下拉刷新就显示loading
@@ -580,7 +549,7 @@ class FileFragment : Fragment() {
             nodes.sortByDescending { it.isDirectory }
             swipeRefresh.isRefreshing = false
             loading.visibility = View.GONE // 移除loading
-            adapter.setItems(nodes)
+            adapter.changeAllItems()
         }
     }
 

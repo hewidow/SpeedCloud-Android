@@ -49,6 +49,7 @@ class UploadFragment : Fragment() {
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
+            mService!!.onProgressListener = null // 解除监听器
             mService = null
             bound = false
         }
@@ -60,11 +61,12 @@ class UploadFragment : Fragment() {
     fun setUploadingNodes() {
         loadingNodes = MainApplication.getInstance().uploadingNodes
         binding.tvLoaded.text = "正在上传（${loadingNodes.size}）"
-        loadingAdapter.setItems(loadingNodes)
+        loadingAdapter.changeAllItems()
     }
 
     override fun onStart() {
         super.onStart()
+        // 绑定服务
         Intent(context, UploadService::class.java).also { intent ->
             activity!!.bindService(intent, mConnection, BIND_AUTO_CREATE)
         }
@@ -72,6 +74,7 @@ class UploadFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+        // 解绑服务
         if (bound) {
             activity!!.unbindService(mConnection)
             bound = false
@@ -114,13 +117,13 @@ class UploadFragment : Fragment() {
     }
 
     /**
-     * 从数据库获取上传完成的记录并设置
+     * 从数据库获取上传完成的历史记录并设置
      */
     private fun getUploadedNodes() {
         loadedNodes.clear()
         loadedNodes.addAll(swapDataBase.swapNodeDao().getAllLoadedByType(true))
         binding.tvLoaded.text = "上传完成（${loadedNodes.size}）"
-        loadedAdapter.setItems(loadedNodes)
+        loadedAdapter.changeAllItems()
     }
 
     companion object {

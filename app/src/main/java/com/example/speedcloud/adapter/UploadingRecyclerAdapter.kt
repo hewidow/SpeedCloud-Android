@@ -46,11 +46,10 @@ class UploadingRecyclerAdapter(private var nodes: ArrayList<UploadingNode>) :
     override fun getItemCount() = nodes.size
 
     /**
-     * 设置新数据
+     * 整个列表项改变，刷新整个列表
      */
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(items: ArrayList<UploadingNode>) {
-        nodes = items
+    fun changeAllItems() {
         notifyDataSetChanged() // 通知数据刷新了
     }
 }

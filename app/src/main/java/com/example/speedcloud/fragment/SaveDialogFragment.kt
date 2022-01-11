@@ -109,7 +109,7 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
     private fun fetchChildren(node: Node) {
         lifecycleScope.launch {
             nodes.clear() // 清空之前的文件
-            adapter.setItems(nodes) // 设置数据
+            adapter.changeAllItems() // 设置数据
             binding.empty.visibility = View.GONE
             binding.loading.visibility = View.VISIBLE
             val r = withContext(Dispatchers.IO) {
@@ -133,7 +133,7 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
             FileUtils.formatData(nodes)
             if (nodes.isEmpty()) binding.empty.visibility = View.VISIBLE
             binding.loading.visibility = View.GONE // 移除loading
-            adapter.setItems(nodes)
+            adapter.changeAllItems()
         }
     }
 

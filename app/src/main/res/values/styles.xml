@@ -14,4 +14,13 @@
         <item name="android:windowEnterAnimation">@anim/popup_window_top_bottom_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/popup_window_top_bottom_exit_anim</item>
     </style>
+
+    <!--ButtonSheetDialog圆角-->
+    <style name="BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
+    </style>
+
+    <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

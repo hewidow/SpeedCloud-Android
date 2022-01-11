@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        // 不在文件页面或已经退到根目录
         if (binding.tabLayout.selectedTabPosition != 0 || !fileFragment.back()) super.onBackPressed()
     }
 }

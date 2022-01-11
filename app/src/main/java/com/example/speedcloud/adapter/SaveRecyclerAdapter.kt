@@ -52,11 +52,11 @@ class SaveRecyclerAdapter(private var nodes: ArrayList<Node>) :
     override fun getItemCount() = nodes.size
 
     /**
-     * 设置新数据
+     * 整个列表项改变，刷新整个列表
      */
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(items: ArrayList<Node>) {
-        nodes = items
+    fun changeAllItems() {
         notifyDataSetChanged() // 通知数据刷新了
     }
+
 }

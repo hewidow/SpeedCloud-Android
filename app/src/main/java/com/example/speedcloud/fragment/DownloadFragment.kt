@@ -74,8 +74,8 @@ class DownloadFragment : Fragment() {
                 }
                 binding.tvLoading.text = "正在下载（${loadingNodes.size}）"
                 binding.tvLoaded.text = "下载完成（${loadedNodes.size}）"
-                loadingAdapter.setItems(loadingNodes)
-                loadedAdapter.setItems(loadedNodes)
+                loadingAdapter.changeAllItems()
+                loadedAdapter.changeAllItems()
                 delay(1000) // 1秒更新一次
             }
         }
