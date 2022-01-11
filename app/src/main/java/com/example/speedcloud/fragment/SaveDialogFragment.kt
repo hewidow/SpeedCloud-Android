@@ -24,7 +24,7 @@ import kotlin.collections.ArrayList
 
 class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment() {
     private lateinit var adapter: SaveRecyclerAdapter
-    private val nodes: ArrayList<Node> = ArrayList()
+    private var nodes: ArrayList<Node> = ArrayList()
     private lateinit var binding: FragmentDialogSaveBinding
     var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
 
@@ -125,12 +125,8 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
             } else {
                 Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
             }
-            nodes.sortByDescending { it.isDirectory }
-            while (nodes.isNotEmpty()) {
-                if (!nodes.last().isDirectory) nodes.removeLast()
-                else break
-            }
             FileUtils.formatData(nodes)
+            FileUtils.filterDataByType(nodes, FileType.DIRECTORY)
             if (nodes.isEmpty()) binding.empty.visibility = View.VISIBLE
             binding.loading.visibility = View.GONE // 移除loading
             adapter.changeAllItems()

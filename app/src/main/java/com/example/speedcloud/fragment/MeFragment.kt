@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.speedcloud.AccountActivity
 import com.example.speedcloud.MainApplication
 import com.example.speedcloud.R
+import com.example.speedcloud.RecycleBinActivity
 import com.example.speedcloud.bean.User
 import com.example.speedcloud.bean.UserDetail
 import com.example.speedcloud.util.FileUtils
@@ -52,6 +53,9 @@ class MeFragment : Fragment() {
                 startAccountActivity()
             }
         }
+        root.findViewById<TextView>(R.id.recycleBin).setOnClickListener {
+            startRecycleBinActivity()
+        }
         username = root.findViewById(R.id.username)
         pb_storage = root.findViewById(R.id.pb_storage)
         tv_storage = root.findViewById(R.id.tv_storage)
@@ -90,6 +94,18 @@ class MeFragment : Fragment() {
                 activity,
                 AccountActivity::class.java
             ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
+    }
+
+    /**
+     * 跳转到回收站界面
+     */
+    private fun startRecycleBinActivity() {
+        startActivity(
+            Intent(
+                activity,
+                RecycleBinActivity::class.java
+            )
         )
     }
 

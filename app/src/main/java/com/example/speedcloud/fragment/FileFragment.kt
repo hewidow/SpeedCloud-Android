@@ -19,6 +19,7 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -68,7 +69,9 @@ class FileFragment : Fragment() {
     private lateinit var delete: Button
     private lateinit var rename: Button
     private lateinit var move: Button
+    private lateinit var search: EditText
     private lateinit var floatingActionButton: FloatingActionButton
+    private var originalNodes: ArrayList<Node> = ArrayList() // 原始的文件数组
     private var nodes: ArrayList<Node> = ArrayList() // 需要展示的文件
     private var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
     private var selectedItem: ArrayList<Node> = ArrayList() // 选择的文件项下标
@@ -96,11 +99,29 @@ class FileFragment : Fragment() {
         initFileActionbar()
 
         root = inflater.inflate(R.layout.fragment_file, container, false)
+
         initAppbar()
+        initSearch()
         initRefresh()
         initRecycler()
         initFloatingActionButton()
         return root
+    }
+
+    /**
+     * 初始化搜索
+     */
+    private fun initSearch() {
+        search = root.findViewById(R.id.search)
+        search.addTextChangedListener {
+            // 不在loading时才触发，可以避免获取子目录时触发此事件
+            if (!swipeRefresh.isRefreshing && loading.visibility != View.VISIBLE) {
+                nodes.clear()
+                nodes.addAll(originalNodes)
+                FileUtils.filterDataByName(nodes, search.text.toString())
+                adapter.changeAllItems()
+            }
+        }
     }
 
     /**
@@ -532,6 +553,7 @@ class FileFragment : Fragment() {
             if (!swipeRefresh.isRefreshing) {
                 loading.visibility = View.VISIBLE
             } // 如果没有下拉刷新就显示loading
+            search.setText("") // 重置搜索
             val r = withContext(Dispatchers.IO) {
                 HttpUtils.get("queryChildren?nodeId=${node.nodeId}")
             }
@@ -546,10 +568,12 @@ class FileFragment : Fragment() {
                 Toast.makeText(context, r.msg, Toast.LENGTH_SHORT).show()
             }
             FileUtils.formatData(nodes)
-            nodes.sortByDescending { it.isDirectory }
+            originalNodes.clear()
+            originalNodes.addAll(nodes)
             swipeRefresh.isRefreshing = false
             loading.visibility = View.GONE // 移除loading
             adapter.changeAllItems()
+
         }
     }
 

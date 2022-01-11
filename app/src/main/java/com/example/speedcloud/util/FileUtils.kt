@@ -24,6 +24,7 @@ object FileUtils {
      * 格式化文件数据
      */
     fun formatData(nodes: ArrayList<Node>) {
+        nodes.sortByDescending { it.isDirectory }
         for (node in nodes) {
             node.type = when {
                 node.isDirectory -> FileType.DIRECTORY
@@ -31,6 +32,26 @@ object FileUtils {
                 node.nodeName.contains(".mp4") -> FileType.VIDEO
                 else -> FileType.DEFAULT
             }
+        }
+    }
+
+    /**
+     * 根据类型筛选数据，需先调用formatData()获取type
+     */
+    fun filterDataByType(nodes: ArrayList<Node>, type: FileType) {
+        (nodes.filter { it.type == type } as ArrayList<Node>).also {
+            nodes.clear()
+            nodes.addAll(it)
+        }
+    }
+
+    /**
+     * 根据名字筛选数据
+     */
+    fun filterDataByName(nodes: ArrayList<Node>, contain: String) {
+        (nodes.filter { it.nodeName.contains(contain) } as ArrayList<Node>).also {
+            nodes.clear()
+            nodes.addAll(it)
         }
     }
 }
