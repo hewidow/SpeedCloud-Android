@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.databinding.RowItemRecycleBinBinding
 import com.example.speedcloud.listener.RecyclerListener
+import com.example.speedcloud.util.DateUtils
 import com.example.speedcloud.util.FileTypeUtils
 import com.example.speedcloud.util.FileUtils
+import java.util.*
 
 class RecycleBinRecyclerAdapter(private var nodes: ArrayList<Node>) :
     RecyclerView.Adapter<RecycleBinRecyclerAdapter.ViewHolder>() {
@@ -28,6 +30,7 @@ class RecycleBinRecyclerAdapter(private var nodes: ArrayList<Node>) :
         val rowItem = binding.rowItem
         val icon = binding.icon
         val checkBox = binding.checkBox
+        val remainTime = binding.remainTime
     }
 
     override fun onCreateViewHolder(
@@ -45,9 +48,11 @@ class RecycleBinRecyclerAdapter(private var nodes: ArrayList<Node>) :
 
         // 设置文件名字和附属信息
         viewHolder.nodeName.text = nodes[position].nodeName
-        var subTitle = nodes[position].createTime
-        if (!nodes[position].isDirectory) subTitle += "  ${FileUtils.formatSize(nodes[position].fileSize)}"
+        var subTitle = ""
+        if (!nodes[position].isDirectory) subTitle += "${FileUtils.formatSize(nodes[position].fileSize)}"
         viewHolder.nodeInfo.text = subTitle
+        viewHolder.remainTime.text =
+            "${DateUtils.getRemainTimeText(nodes[position].deleteTime!!)}后清除"
 
         // 设置点击列表项回调
         viewHolder.rowItem.setOnClickListener {
