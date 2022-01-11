@@ -24,7 +24,6 @@ object FileUtils {
      * 格式化文件数据
      */
     fun formatData(nodes: ArrayList<Node>) {
-        nodes.sortByDescending { it.isDirectory }
         for (node in nodes) {
             node.type = when {
                 node.isDirectory -> FileType.DIRECTORY
@@ -32,7 +31,16 @@ object FileUtils {
                 node.nodeName.contains(".mp4") -> FileType.VIDEO
                 else -> FileType.DEFAULT
             }
+            node.deleteTime?.let { node.deleteDate = DateUtils.timeToDate(it) }
         }
+        nodes.sortByDescending { -it.type.ordinal }
+    }
+
+    /**
+     * 按删除日期由近到远排序
+     */
+    fun sortDataByDeleteDate(nodes: ArrayList<Node>) {
+        nodes.sortByDescending { it.deleteDate?.time ?: 0 }
     }
 
     /**

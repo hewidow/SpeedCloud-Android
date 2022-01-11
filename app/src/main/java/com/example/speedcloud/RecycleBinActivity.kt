@@ -22,6 +22,8 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RecycleBinActivity : AppCompatActivity() {
     private lateinit var adapter: RecycleBinRecyclerAdapter
@@ -139,6 +141,7 @@ class RecycleBinActivity : AppCompatActivity() {
                 Toast.makeText(this@RecycleBinActivity, r.msg, Toast.LENGTH_SHORT).show()
             }
             FileUtils.formatData(nodes)
+            FileUtils.sortDataByDeleteDate(nodes)
             binding.loading.visibility = View.GONE
             adapter.changeAllItems()
         }

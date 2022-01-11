@@ -83,7 +83,7 @@ class FileFragment : Fragment() {
         backArrowDrawable =
             ContextCompat.getDrawable(context!!, R.drawable.ic_baseline_arrow_back_ios_24)!!
         // 加入开始的根目录id
-        backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0, FileType.DIRECTORY))
+        backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0))
     }
 
     override fun onCreateView(

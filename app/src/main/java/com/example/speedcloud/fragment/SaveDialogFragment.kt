@@ -69,7 +69,7 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
             }
         }
         binding.rvSave.adapter = adapter
-        backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0, FileType.DIRECTORY))
+        backStack.add(Node("", "", 0, 0, true, 1, "全部文件", 0))
         refreshPath()
         return binding.root
     }

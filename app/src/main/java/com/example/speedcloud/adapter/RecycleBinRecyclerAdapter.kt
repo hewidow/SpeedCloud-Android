@@ -52,7 +52,7 @@ class RecycleBinRecyclerAdapter(private var nodes: ArrayList<Node>) :
         if (!nodes[position].isDirectory) subTitle += "${FileUtils.formatSize(nodes[position].fileSize)}"
         viewHolder.nodeInfo.text = subTitle
         viewHolder.remainTime.text =
-            "${DateUtils.getRemainTimeText(nodes[position].deleteTime!!)}后清除"
+            "${DateUtils.getRemainTimeText(nodes[position].deleteDate!!)}后清除"
 
         // 设置点击列表项回调
         viewHolder.rowItem.setOnClickListener {
