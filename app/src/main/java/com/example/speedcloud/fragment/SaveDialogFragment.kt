@@ -24,9 +24,9 @@ import kotlin.collections.ArrayList
 
 class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment() {
     private lateinit var adapter: SaveRecyclerAdapter
-    private var nodes: ArrayList<Node> = ArrayList()
+    private val nodes: ArrayList<Node> = ArrayList()
     private lateinit var binding: FragmentDialogSaveBinding
-    var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
+    private var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
 
     override fun onCreateView(
         inflater: LayoutInflater,

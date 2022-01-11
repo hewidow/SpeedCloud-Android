@@ -48,7 +48,7 @@
         <Button
             android:id="@+id/delete"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:backgroundTint="@color/button_background_color_selector"
             android:text="删除"
@@ -62,7 +62,7 @@
         <Button
             android:id="@+id/rename"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:backgroundTint="@color/button_background_color_selector"
             android:text="改名"
@@ -76,7 +76,7 @@
         <Button
             android:id="@+id/move"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:backgroundTint="@color/button_background_color_selector"
             android:text="移动"

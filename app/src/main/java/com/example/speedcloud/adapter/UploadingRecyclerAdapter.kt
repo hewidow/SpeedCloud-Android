@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.bean.UploadingNode
 import com.example.speedcloud.databinding.RowItemSwapLoadingBinding
@@ -16,13 +13,13 @@ class UploadingRecyclerAdapter(private var nodes: ArrayList<UploadingNode>) :
     RecyclerView.Adapter<UploadingRecyclerAdapter.ViewHolder>() {
     inner class ViewHolder(binding: RowItemSwapLoadingBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val nodeName: TextView = binding.nodeName
-        val nodeSize: TextView = binding.nodeSize
-        val speed: TextView = binding.speed
-        val progressBar: ProgressBar = binding.progressBar
-        val swapPause: ImageButton = binding.swapPause
-        val swapPlay: ImageButton = binding.swapPlay
-        val swapCancel: ImageButton = binding.swapCancel
+        val nodeName = binding.nodeName
+        val nodeSize = binding.nodeSize
+        val speed = binding.speed
+        val progressBar = binding.progressBar
+        val swapPause = binding.swapPause
+        val swapPlay = binding.swapPlay
+        val swapCancel = binding.swapCancel
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

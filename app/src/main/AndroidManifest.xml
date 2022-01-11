@@ -17,6 +17,9 @@
         android:theme="@style/Theme.SpeedCloud"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ShareActivity"
+            android:exported="true" />
+        <activity
             android:name=".RecycleBinActivity"
             android:exported="true" />
 

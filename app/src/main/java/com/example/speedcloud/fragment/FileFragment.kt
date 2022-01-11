@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.speedcloud.*
-import com.example.speedcloud.adapter.RecyclerAdapter
+import com.example.speedcloud.adapter.FileRecyclerAdapter
 import com.example.speedcloud.bean.FileType
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.bean.ShareLink
@@ -51,7 +51,7 @@ class FileFragment : Fragment() {
     private lateinit var appbar: AppBarLayout
     private lateinit var toolbar: Toolbar
     private lateinit var recycler: RecyclerView
-    private lateinit var adapter: RecyclerAdapter
+    private lateinit var adapter: FileRecyclerAdapter
     private lateinit var backArrowDrawable: Drawable
     private lateinit var fileToolbarView: View
     private lateinit var fileToolbarWindow: PopupWindow
@@ -59,7 +59,7 @@ class FileFragment : Fragment() {
     private lateinit var fileActionbarWindow: PopupWindow
     private lateinit var nestedScrollView: NestedScrollView
     private lateinit var loading: ProgressBar
-    private lateinit var selectNumber: TextView
+    private lateinit var selectedNumber: TextView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var cancel: Button
     private lateinit var selectAll: Button
@@ -71,10 +71,10 @@ class FileFragment : Fragment() {
     private lateinit var move: Button
     private lateinit var search: EditText
     private lateinit var floatingActionButton: FloatingActionButton
-    private var originalNodes: ArrayList<Node> = ArrayList() // 原始的文件数组
-    private var nodes: ArrayList<Node> = ArrayList() // 需要展示的文件
+    private val originalNodes: ArrayList<Node> = ArrayList() // 原始的文件数组
+    private val nodes: ArrayList<Node> = ArrayList() // 需要展示的文件
     private var backStack: ArrayList<Node> = ArrayList() // 文件目录返回栈
-    private var selectedItem: ArrayList<Node> = ArrayList() // 选择的文件项下标
+    private var selectedItem: ArrayList<Node> = ArrayList() // 选择的文件项
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -148,18 +148,18 @@ class FileFragment : Fragment() {
         cancel = fileActionbarView.findViewById(R.id.cancel)
         selectAll = fileActionbarView.findViewById(R.id.selectAll)
         unselectAll = fileActionbarView.findViewById(R.id.unselectAll)
-        selectNumber = fileActionbarView.findViewById(R.id.selectNumber)
+        selectedNumber = fileActionbarView.findViewById(R.id.selectedNumber)
 
         cancel.setOnClickListener { back() }
         selectAll.setOnClickListener {
-            adapter.selectAllOrNot(true)
-            selectAll.visibility = View.GONE
+            it.visibility = View.GONE
             unselectAll.visibility = View.VISIBLE
+            adapter.selectAllOrNot(true)
         }
         unselectAll.setOnClickListener {
-            adapter.selectAllOrNot(false)
-            unselectAll.visibility = View.GONE
+            it.visibility = View.GONE
             selectAll.visibility = View.VISIBLE
+            adapter.selectAllOrNot(false)
         }
         fileActionbarWindow = PopupWindow(
             fileActionbarView,
@@ -501,7 +501,15 @@ class FileFragment : Fragment() {
             delete.isEnabled = (value > 0)
             rename.isEnabled = (value == 1)
             move.isEnabled = (value >= 1)
-            selectNumber.text = "已选中${value}个文件"
+            selectedNumber.text = "已选中${value}个文件"
+            if (value == nodes.size) {
+                selectAll.visibility = View.GONE
+                unselectAll.visibility = View.VISIBLE
+            }
+            if (value == 0) {
+                unselectAll.visibility = View.GONE
+                selectAll.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -513,7 +521,7 @@ class FileFragment : Fragment() {
         // 设置一个垂直方向的网格布局管理器
         recycler.layoutManager = GridLayoutManager(context, 1)
         // 设置数据适配器
-        adapter = RecyclerAdapter(nodes)
+        adapter = FileRecyclerAdapter(nodes)
         // 设置点击监听器
         adapter.onItemClickListener = MyOnItemClickListener()
         // 设置长按监听器

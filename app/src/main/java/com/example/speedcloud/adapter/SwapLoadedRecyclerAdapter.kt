@@ -3,7 +3,6 @@ package com.example.speedcloud.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.databinding.RowItemSwapBinding
@@ -13,8 +12,8 @@ import java.text.SimpleDateFormat
 class SwapLoadedRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
     RecyclerView.Adapter<SwapLoadedRecyclerAdapter.ViewHolder>() {
     inner class ViewHolder(binding: RowItemSwapBinding) : RecyclerView.ViewHolder(binding.root) {
-        val nodeName: TextView = binding.nodeName
-        val nodeInfo: TextView = binding.nodeInfo
+        val nodeName = binding.nodeName
+        val nodeInfo = binding.nodeInfo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

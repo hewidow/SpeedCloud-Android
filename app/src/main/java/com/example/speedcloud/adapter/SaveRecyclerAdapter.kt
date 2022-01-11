@@ -3,9 +3,6 @@ package com.example.speedcloud.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.bean.Node
 import com.example.speedcloud.databinding.RowItemSaveBinding
@@ -20,10 +17,10 @@ class SaveRecyclerAdapter(private var nodes: ArrayList<Node>) :
 
     inner class ViewHolder(binding: RowItemSaveBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val nodeName: TextView = binding.nodeName
-        val nodeInfo: TextView = binding.nodeInfo
-        val rowItem: LinearLayout = binding.rowItem
-        val icon: ImageView = binding.icon
+        val nodeName = binding.nodeName
+        val nodeInfo = binding.nodeInfo
+        val rowItem = binding.rowItem
+        val icon = binding.icon
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {

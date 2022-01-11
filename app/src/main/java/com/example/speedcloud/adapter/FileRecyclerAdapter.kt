@@ -15,8 +15,8 @@ import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.util.FileTypeUtils
 import com.example.speedcloud.util.FileUtils
 
-class RecyclerAdapter(private var nodes: ArrayList<Node>) :
-    RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class FileRecyclerAdapter(private var nodes: ArrayList<Node>) :
+    RecyclerView.Adapter<FileRecyclerAdapter.ViewHolder>() {
 
     var onItemClickListener: RecyclerListener.OnItemClickListener? = null
     var onItemLongClickListener: RecyclerListener.OnItemLongClickListener? = null
