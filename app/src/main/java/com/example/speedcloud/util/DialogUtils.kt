@@ -27,9 +27,8 @@ object DialogUtils {
         message: String,
         onClickListener: View.OnClickListener
     ) {
-        val builder = AlertDialog.Builder(context)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_alert, null)
-        val dialog = builder.setCancelable(false).setView(view).create()
+        val dialog = AlertDialog.Builder(context).setCancelable(false).setView(view).create()
         view.findViewById<TextView>(R.id.title).text = title
         view.findViewById<TextView>(R.id.message).text = message
         view.findViewById<TextView>(R.id.cancel).setOnClickListener { dialog.dismiss() }
@@ -45,7 +44,6 @@ object DialogUtils {
         )
         dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
-
     }
 
     /**
@@ -111,5 +109,36 @@ object DialogUtils {
                 }
             }
         ).into(image)
+    }
+
+    /**
+     * 查看分享链接对话框
+     */
+    fun showShareDialog(
+        context: Context,
+        code: String?,
+        onClickListener: View.OnClickListener
+    ) {
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_share_link_look, null)
+        val dialog = AlertDialog.Builder(context).setCancelable(false).setView(view).create()
+        if (code != null) {
+            view.findViewById<TextView>(R.id.code).also {
+                it.visibility = View.VISIBLE
+                it.text = "提取码：${code}（来自剪贴板）"
+            }
+        } else view.findViewById<TextView>(R.id.code).visibility = View.GONE
+        view.findViewById<ImageButton>(R.id.close).setOnClickListener { dialog.dismiss() }
+        view.findViewById<Button>(R.id.look).setOnClickListener {
+            dialog.dismiss()
+            onClickListener.onClick(it)
+        }
+        val displayRectangle = Rect()
+        dialog.window!!.decorView.getWindowVisibleDisplayFrame(displayRectangle)
+        dialog.window!!.setLayout(
+            (displayRectangle.width() * 0.80).toInt(),
+            dialog.window!!.attributes.height
+        )
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
     }
 }

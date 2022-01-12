@@ -22,7 +22,11 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment() {
+class SaveDialogFragment(
+    private var title: String,
+    private var saveButtonText: String,
+    private var clickMove: (Int) -> Unit
+) : DialogFragment() {
     private lateinit var adapter: SaveRecyclerAdapter
     private val nodes: ArrayList<Node> = ArrayList()
     private lateinit var binding: FragmentDialogSaveBinding
@@ -34,6 +38,9 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDialogSaveBinding.inflate(inflater, container, false)
+
+        binding.title.text = title
+        binding.btnSave.text = saveButtonText
 
         binding.btnNew.setOnClickListener {
             DialogUtils.showCreateFolderDialog(context!!) { name ->
@@ -57,7 +64,7 @@ class SaveDialogFragment(private var clickMove: (Int) -> Unit) : DialogFragment(
             }
         }
         binding.btnCancel.setOnClickListener { dismiss() }
-        binding.btnMove.setOnClickListener {
+        binding.btnSave.setOnClickListener {
             clickMove(backStack.last().nodeId)
             dismiss()
         }

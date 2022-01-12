@@ -189,7 +189,7 @@ class FileFragment : Fragment() {
         }
         share.setOnClickListener {
             getSelectedItem()
-            val view = layoutInflater.inflate(R.layout.dialog_share, null)
+            val view = layoutInflater.inflate(R.layout.dialog_share_link_copy, null)
             val dialog = AlertDialog.Builder(context).setView(view).create()
             val spinner = view.findViewById<Spinner>(R.id.spinner)
             ArrayAdapter.createFromResource(
@@ -221,7 +221,7 @@ class FileFragment : Fragment() {
                             .getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(
                             ClipData.newPlainText(
                                 "SpeedCloud Share Link",
-                                "分享链接:\n${getString(R.string.host)}share?id=${shareLink.uniqueId}\n提取码: ${shareLink.checkCode}"
+                                "分享链接：\n${getString(R.string.host)}share?id=${shareLink.uniqueId}\n提取码：${shareLink.checkCode}"
                             )
                         )
                         Toast.makeText(context, "复制成功", Toast.LENGTH_SHORT).show()
@@ -305,7 +305,7 @@ class FileFragment : Fragment() {
         move.setOnClickListener {
             getSelectedItem()
             val fragmentManager = activity!!.supportFragmentManager
-            val newFragment = SaveDialogFragment { id ->
+            val newFragment = SaveDialogFragment("选择移动位置", "移动至此") { id ->
                 back()
                 lifecycleScope.launch {
                     val r = withContext(Dispatchers.IO) {

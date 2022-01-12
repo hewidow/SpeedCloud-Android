@@ -1,7 +1,10 @@
 package com.example.speedcloud
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -11,6 +14,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.speedcloud.databinding.ActivityMainBinding
 import com.example.speedcloud.fragment.FileFragment
 import com.example.speedcloud.fragment.MeFragment
+import com.example.speedcloud.util.DialogUtils
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
@@ -66,8 +70,36 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * 重写回退方法
+     */
     override fun onBackPressed() {
         // 不在文件页面或已经退到根目录
         if (binding.tabLayout.selectedTabPosition != 0 || !fileFragment.back()) super.onBackPressed()
+    }
+
+    /**
+     * 监听剪贴板跳转分享文件页面
+     */
+    override fun onStart() {
+        super.onStart()
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val text = clipboard.primaryClip?.getItemAt(0)?.text
+        text?.also { r ->
+            val shareIdRes = Regex("http://101\\.43\\.111\\.132/share\\?id=(\\d+)").find(r)
+            val uniqueId: String? = shareIdRes?.groupValues?.get(1)
+            val codeRes = Regex("提取码：(\\d{4})").find(r)
+            val code: String? = codeRes?.groupValues?.get(1)
+            uniqueId?.also {
+                clipboard.setPrimaryClip(ClipData.newPlainText("SpeedCloud Share Link", ""))
+                DialogUtils.showShareDialog(this, code) {
+                    startActivity(
+                        Intent(this, ShareActivity::class.java)
+                            .putExtra("uniqueId", uniqueId)
+                            .putExtra("code", code)
+                    )
+                }
+            }
+        }
     }
 }
