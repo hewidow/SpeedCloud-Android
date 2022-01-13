@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/title"
             android:layout_alignEnd="@id/title"
+            android:layout_marginEnd="6dp"
             android:text="新建文件夹" />
     </RelativeLayout>
 

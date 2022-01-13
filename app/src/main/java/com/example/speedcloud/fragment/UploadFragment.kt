@@ -36,8 +36,6 @@ class UploadFragment : Fragment() {
     private var swapDataBase = MainApplication.getInstance().swapDataBase
     private var mService: UploadService? = null
     private var bound: Boolean = false
-    private var befTimeStamp: Long = 0
-    private var speed: Long = 0
     private val mConnection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -160,7 +158,7 @@ class UploadFragment : Fragment() {
     }
 
     /**
-     * 获取更多节点
+     * 获取更多上传完成的历史记录
      */
     private fun getMoreUploadedNodes() {
         val res = swapDataBase.swapNodeDao().getAllLoadedByType(true, 18, page * 18)

@@ -7,14 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.speedcloud.MainApplication
-import com.example.speedcloud.bean.SwapNode
+import com.example.speedcloud.bean.DownloadingNode
 import com.example.speedcloud.databinding.RowItemSwapLoadingBinding
 import com.example.speedcloud.util.DownloadManagerUtils
 import com.example.speedcloud.util.FileUtils
 
-class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
-    RecyclerView.Adapter<SwapLoadingRecyclerAdapter.ViewHolder>() {
+class DownloadingRecyclerAdapter(private var nodes: ArrayList<DownloadingNode>) :
+    RecyclerView.Adapter<DownloadingRecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(binding: RowItemSwapLoadingBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -55,8 +54,6 @@ class SwapLoadingRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
             AlertDialog.Builder(holder.itemView.context).setTitle("确定取消")
                 .setPositiveButton("确定") { _, _ ->
                     DownloadManagerUtils.remove(nodes[position].task)
-                    MainApplication.getInstance().swapDataBase.swapNodeDao()
-                        .deleteByTask(nodes[position].task)
                 }.setNegativeButton("取消") { dialog, _ ->
                     dialog.dismiss()
                 }.create().show()

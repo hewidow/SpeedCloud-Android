@@ -2,10 +2,10 @@ package com.example.speedcloud
 
 import android.app.Application
 import androidx.room.Room
-import com.example.speedcloud.bean.FileState
-import com.example.speedcloud.bean.UploadingNode
-import com.example.speedcloud.bean.User
+import com.example.speedcloud.bean.*
 import com.example.speedcloud.database.SwapDatabase
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainApplication : Application() {
     companion object {
@@ -19,6 +19,7 @@ class MainApplication : Application() {
     var user: User? = null
     lateinit var swapDataBase: SwapDatabase
     var uploadingNodes: ArrayList<UploadingNode> = ArrayList()
+    var downloadingNodes: ArrayList<DownloadingNode> = ArrayList()
 
     override fun onCreate() {
         super.onCreate()
@@ -60,5 +61,29 @@ class MainApplication : Application() {
      */
     fun uploadingPop() {
         uploadingNodes.removeFirst()
+    }
+
+    /**
+     * 下载结束
+     * @param task 任务id
+     * @param cancel 是否是用户主动取消的
+     */
+    fun downloadingDone(task: Long, cancel: Boolean) {
+        for (i in downloadingNodes.indices) {
+            if (downloadingNodes[i].task == task) {
+                if (!cancel) swapDataBase.swapNodeDao()
+                    .insertAll(
+                        SwapNode(
+                            0,
+                            false,
+                            Date(),
+                            downloadingNodes[i].size,
+                            downloadingNodes[i].name
+                        )
+                    )
+                downloadingNodes.removeAt(i)
+                break
+            }
+        }
     }
 }

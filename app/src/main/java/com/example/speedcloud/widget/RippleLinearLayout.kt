@@ -25,12 +25,13 @@ class RippleLinearLayout : LinearLayout {
         initView()
         mContext = context
         timer = Timer()
-        timer.schedule(drawTask, Date(), 1000 / fps) // 启动定时任务
+        timer.schedule(drawTask, 0, 1000 / fps) // 启动定时任务
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         timer.cancel() // 销毁时取消定时任务
+        timer.purge() // 清除所有已经取消的任务
     }
 
     lateinit var mPaint: Paint

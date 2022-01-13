@@ -1,6 +1,6 @@
 package com.example.speedcloud.service
 
-import android.app.Service
+import android.app.*
 import android.content.Intent
 import android.os.*
 import android.os.Process.THREAD_PRIORITY_BACKGROUND
@@ -77,7 +77,8 @@ class UploadService : Service() {
             var len = 0
             while (randomAccessFile.read(bytes).also { len = it } != -1) {
                 messageDigest.update(bytes, 0, len)
-                chunkMd5.add(getMd5(chunkMessageDigest.digest(bytes)))
+                chunkMessageDigest.update(bytes, 0, len)
+                chunkMd5.add(getMd5(chunkMessageDigest.digest()))
             }
             return getMd5(messageDigest.digest())
         }
@@ -142,9 +143,9 @@ class UploadService : Service() {
          */
         private fun finishUpload(file: File) {
             MainApplication.getInstance().uploadingPop()
-            onCompleteTransferListener?.onCompleteTransfer()
             MainApplication.getInstance().swapDataBase.swapNodeDao()
-                .insertAll(SwapNode(0, true, Date(), file.length(), file.name, 0, 0, 0, 0))
+                .insertAll(SwapNode(0, true, Date(), file.length(), file.name))
+            onCompleteTransferListener?.onCompleteTransfer()
         }
 
         /**

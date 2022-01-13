@@ -101,6 +101,7 @@ class ShareActivity : AppCompatActivity() {
                 FileUtils.formatData(nodes)
                 binding.codePage.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
+                binding.bottomToolbar.visibility = View.VISIBLE
                 adapter.changeAllItems()
             } else {
                 Toast.makeText(this@ShareActivity, r.msg, Toast.LENGTH_SHORT).show()

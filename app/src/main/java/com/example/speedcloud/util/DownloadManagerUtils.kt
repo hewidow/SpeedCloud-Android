@@ -6,9 +6,8 @@ import android.net.Uri
 import android.os.Environment
 import com.example.speedcloud.MainApplication
 import com.example.speedcloud.R
+import com.example.speedcloud.bean.DownloadingNode
 import com.example.speedcloud.bean.Node
-import com.example.speedcloud.bean.SwapNode
-import java.util.*
 
 object DownloadManagerUtils {
     private val downloadManager = MainApplication.getInstance()
@@ -52,11 +51,10 @@ object DownloadManagerUtils {
         request.setTitle("正在下载 ${node.nodeName}")
         request.setDescription("SpeedCloud")
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-        val id = downloadManager.enqueue(request)
-        MainApplication.getInstance().swapDataBase.swapNodeDao()
-            .insertAll(
-                SwapNode(0, false, Date(), 0, node.nodeName, id, 0, 0, 0)
-            ) // 往数据库中插入下载记录
+        val task = downloadManager.enqueue(request)
+        MainApplication.getInstance().downloadingNodes.add(
+            DownloadingNode(node.nodeName, task, node.fileSize, 0, 0, 0)
+        )// 插入下载记录
     }
 
     /**
