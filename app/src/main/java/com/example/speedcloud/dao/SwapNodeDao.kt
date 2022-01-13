@@ -11,9 +11,8 @@ interface SwapNodeDao {
     @Query("SELECT * FROM SwapNode WHERE type=:type AND task!=0")
     fun getAllLoadingByType(type: Boolean): List<SwapNode>
 
-    // 取前15条记录
-    @Query("SELECT * FROM SwapNode WHERE type=:type AND task=0 ORDER BY time DESC LIMIT 15")
-    fun getAllLoadedByType(type: Boolean): List<SwapNode>
+    @Query("SELECT * FROM SwapNode WHERE type=:type AND task=0 ORDER BY time DESC LIMIT :limit OFFSET :offset")
+    fun getAllLoadedByType(type: Boolean, limit: Int, offset: Int): List<SwapNode>
 
     @Insert
     fun insertAll(vararg swapNode: SwapNode)

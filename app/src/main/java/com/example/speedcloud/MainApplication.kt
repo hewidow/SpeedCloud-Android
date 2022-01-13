@@ -2,6 +2,7 @@ package com.example.speedcloud
 
 import android.app.Application
 import androidx.room.Room
+import com.example.speedcloud.bean.FileState
 import com.example.speedcloud.bean.UploadingNode
 import com.example.speedcloud.bean.User
 import com.example.speedcloud.database.SwapDatabase
@@ -33,27 +34,31 @@ class MainApplication : Application() {
     }
 
     /**
-     * 更新任务进度
+     * 改变状态
      */
-    fun uploadingUpdate(startId: Int, value: Long) {
-        for (node in uploadingNodes) {
-            if (node.startId == startId) {
-                node.uploaded = value
-                break
-            }
-        }
+    fun uploadingState(state: FileState) {
+        uploadingNodes[0].state = state
+    }
+
+    /**
+     * 添加一个新的上传任务
+     */
+    fun uploadingPush(uploadingNode: UploadingNode) {
+        uploadingNodes.add(uploadingNode)
+    }
+
+    /**
+     * 更新上传任务进度
+     */
+    fun uploadingUpdate(value: Long) {
+        uploadingNodes[0].speed = value - uploadingNodes[0].uploaded
+        uploadingNodes[0].uploaded = value
     }
 
     /**
      * 去除完成的任务
      */
-    fun uploadingFilter() {
-        val temp: ArrayList<UploadingNode> = ArrayList()
-        for (node in uploadingNodes) {
-            if (node.uploaded < node.size) {
-                temp.add(node)
-            }
-        }
-        uploadingNodes = temp
+    fun uploadingPop() {
+        uploadingNodes.removeFirst()
     }
 }

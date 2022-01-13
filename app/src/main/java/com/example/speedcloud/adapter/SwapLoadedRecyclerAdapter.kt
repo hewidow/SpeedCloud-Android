@@ -8,9 +8,11 @@ import com.example.speedcloud.bean.SwapNode
 import com.example.speedcloud.databinding.RowItemSwapBinding
 import com.example.speedcloud.util.FileUtils
 import java.text.SimpleDateFormat
+import java.util.*
 
 class SwapLoadedRecyclerAdapter(private var nodes: ArrayList<SwapNode>) :
     RecyclerView.Adapter<SwapLoadedRecyclerAdapter.ViewHolder>() {
+
     inner class ViewHolder(binding: RowItemSwapBinding) : RecyclerView.ViewHolder(binding.root) {
         val nodeName = binding.nodeName
         val nodeInfo = binding.nodeInfo

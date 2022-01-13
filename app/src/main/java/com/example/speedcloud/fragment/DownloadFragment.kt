@@ -3,12 +3,15 @@ package com.example.speedcloud.fragment
 import android.os.Bundle
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.os.Environment.getExternalStoragePublicDirectory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.speedcloud.MainApplication
 import com.example.speedcloud.adapter.SwapLoadedRecyclerAdapter
 import com.example.speedcloud.adapter.SwapLoadingRecyclerAdapter
@@ -29,6 +32,7 @@ class DownloadFragment : Fragment() {
     private lateinit var loadedAdapter: SwapLoadedRecyclerAdapter
     private lateinit var binding: FragmentDownloadBinding
     private var swapDataBase = MainApplication.getInstance().swapDataBase
+    private var isLoadingMore = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +48,11 @@ class DownloadFragment : Fragment() {
         binding = FragmentDownloadBinding.inflate(inflater, container, false)
 
         loadingNodes.addAll(swapDataBase.swapNodeDao().getAllLoadingByType(false))
-        loadedNodes.addAll(swapDataBase.swapNodeDao().getAllLoadedByType(false))
+        loadedNodes.addAll(swapDataBase.swapNodeDao().getAllLoadedByType(false, 12, 0))
         initRecycler()
         binding.downloadLocation.text =
             "文件下载至：${getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS)?.path}"
-        initTimedTask()
+        // initTimedTask()
         return binding.root
     }
 
@@ -62,7 +66,7 @@ class DownloadFragment : Fragment() {
                     loadingNodes.clear()
                     loadedNodes.clear()
                     loadingNodes.addAll(swapDataBase.swapNodeDao().getAllLoadingByType(false))
-                    loadedNodes.addAll(swapDataBase.swapNodeDao().getAllLoadedByType(false))
+                    loadedNodes.addAll(swapDataBase.swapNodeDao().getAllLoadedByType(false, 12, 0))
                     for (i in loadingNodes.indices) {
                         val res = DownloadManagerUtils.getDownloadProgress(loadingNodes[i].task)
                         loadingNodes[i].speed = res.first - loadingNodes[i].progress
@@ -94,6 +98,19 @@ class DownloadFragment : Fragment() {
         // 给recycler设置适配器
         binding.rvLoading.adapter = loadingAdapter
         binding.rvLoaded.adapter = loadedAdapter
+
+        binding.rvLoaded.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                Log.d("hgf", "onScrolled")
+                super.onScrolled(recyclerView, dx, dy)
+                val lm: LinearLayoutManager = binding.rvLoaded.layoutManager as LinearLayoutManager
+                val p = lm.findLastVisibleItemPosition()
+                val total = lm.itemCount
+                if (total > 0 && p == total - 1 && !isLoadingMore) {
+                    isLoadingMore = true
+                }
+            }
+        })
     }
 
     companion object {

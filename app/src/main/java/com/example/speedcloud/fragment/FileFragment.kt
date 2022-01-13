@@ -27,9 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.speedcloud.*
 import com.example.speedcloud.adapter.FileRecyclerAdapter
-import com.example.speedcloud.bean.FileType
-import com.example.speedcloud.bean.Node
-import com.example.speedcloud.bean.ShareLink
+import com.example.speedcloud.bean.*
 import com.example.speedcloud.listener.RecyclerListener
 import com.example.speedcloud.service.UploadService
 import com.example.speedcloud.util.*
@@ -40,6 +38,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -391,6 +390,17 @@ class FileFragment : Fragment() {
      */
     private fun upload(uri: Uri) {
         val path = UriUtils.getFileAbsolutePath(context, uri)
+        val file = File(path)
+        MainApplication.getInstance().uploadingPush(
+            UploadingNode(
+                FileState.WAIT,
+                file.name,
+                file.length(),
+                0,
+                0
+            )
+        )
+        Log.d("hgf", "${file.path} | ${file.name} | ${file.length()}")
         Intent(
             context,
             UploadService::class.java

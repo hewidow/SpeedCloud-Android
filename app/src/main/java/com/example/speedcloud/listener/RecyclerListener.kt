@@ -18,7 +18,18 @@ interface RecyclerListener {
         fun onCheckedChange(view: View, position: Int, isChecked: Boolean)
     }
 
+    // 选中的列表项数目变化监听器
     interface OnSelectedItemNumberChangeListener {
         fun onSelectedItemNumberChange(value: Int)
+    }
+
+    // 进度条改变监听器
+    interface OnProgressChangeListener {
+        fun onProgressChange()
+    }
+
+    // 完成传输监听器
+    interface OnCompleteTransferListener {
+        fun onCompleteTransfer()
     }
 }

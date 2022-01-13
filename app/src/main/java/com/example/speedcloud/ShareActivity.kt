@@ -53,7 +53,7 @@ class ShareActivity : AppCompatActivity() {
 
         binding.save.setOnClickListener {
             val fragmentManager = supportFragmentManager
-            val newFragment = SaveDialogFragment("选择保存位置", "保持至此") { id ->
+            val newFragment = SaveDialogFragment("选择保存位置", "保存至此") { id ->
                 lifecycleScope.launch {
                     val r = withContext(Dispatchers.IO) {
                         HttpUtils.post(

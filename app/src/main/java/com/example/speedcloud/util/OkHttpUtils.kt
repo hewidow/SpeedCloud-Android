@@ -13,6 +13,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
 import java.net.HttpURLConnection.HTTP_OK
+import java.util.concurrent.TimeUnit
 
 object OkHttpUtils {
     private var api = MainApplication.getInstance().getString(R.string.api) // 根地址
@@ -27,7 +28,11 @@ object OkHttpUtils {
     /**
      * 同步post
      */
-    fun syncPost(path: String, requestBody: RequestBody): Result {
+    private fun syncPost(
+        path: String,
+        requestBody: RequestBody,
+        noTimeOut: Boolean = false
+    ): Result {
         val url = api + path
         val request = Request.Builder()
             .url(url)
@@ -36,7 +41,10 @@ object OkHttpUtils {
             .post(requestBody)
             .build()
         try {
-            val response: Response = OkHttpClient().newCall(request).execute()
+            val timeOut: Long = if (noTimeOut) 0 else 5
+            val response: Response =
+                OkHttpClient().newBuilder().connectTimeout(timeOut, TimeUnit.SECONDS).build()
+                    .newCall(request).execute()
             val temp = Gson().fromJson(
                 response.body!!.string(),
                 HttpUtils.Response::class.java

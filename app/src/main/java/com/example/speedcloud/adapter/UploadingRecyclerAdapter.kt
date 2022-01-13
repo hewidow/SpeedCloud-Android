@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.speedcloud.bean.FileState
 import com.example.speedcloud.bean.UploadingNode
 import com.example.speedcloud.databinding.RowItemSwapLoadingBinding
 import com.example.speedcloud.util.FileUtils
@@ -33,8 +34,12 @@ class UploadingRecyclerAdapter(private var nodes: ArrayList<UploadingNode>) :
             (nodes[position].uploaded * 100 / nodes[position].size).toInt()
         holder.nodeSize.text =
             "${FileUtils.formatSize(nodes[position].uploaded)}/${FileUtils.formatSize(nodes[position].size)}"
+        holder.speed.text = when (nodes[position].state) {
+            FileState.WAIT -> "正在等待"
+            FileState.CALC -> "正在计算md5"
+            else -> "${FileUtils.formatSize(nodes[position].speed)}/s"
+        }
         // 以后再做
-        holder.speed.text = ""
         holder.swapPause.visibility = View.GONE
         holder.swapPlay.visibility = View.GONE
         holder.swapCancel.visibility = View.GONE

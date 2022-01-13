@@ -16,6 +16,5 @@ data class SwapNode(
     @ColumnInfo(name = "task") val task: Long,// 下载编号，0表示不在下载
     @ColumnInfo(name = "progress") var progress: Long,// 下载进度
     @ColumnInfo(name = "state") var state: Int, // 下载状态
-    @ColumnInfo(name = "speed") var speed: Long // 下载速度
-    // 懒得新建个bean了
+    @ColumnInfo(name = "speed") var speed: Long, // 下载速度
 )
