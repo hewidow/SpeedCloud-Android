@@ -81,8 +81,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * 监听剪贴板跳转分享文件页面
      */
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val text = clipboard.primaryClip?.getItemAt(0)?.text
         text?.also { r ->
