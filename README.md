@@ -1,5 +1,5 @@
 # SpeedCloud-Android
-本项目为移动应用开发课设，使用Kotlin语言开发，界面大致仿照百度网盘Android端APP。软件界面如[项目总结报告](https://github.com/hewidow/SpeedCloud-Android/blob/master/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E6%8A%A5%E5%91%8A.docx)里的所示，打包好的应用[SpeedCloud.apk](https://github.com/hewidow/SpeedCloud-Android/releases/tag/v1.0.0)在这里，API的请求地址在[config.xml](https://github.com/hewidow/SpeedCloud-Android/blob/master/app/src/main/res/values/config.xml)中设置。
+本项目为移动应用开发课设，使用Kotlin语言开发，界面大致仿照百度网盘Android端APP。软件界面如[项目总结报告](https://github.com/hewidow/SpeedCloud-Android/blob/master/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E6%8A%A5%E5%91%8A.docx)里的所示，打包好的应用[SpeedCloud.apk](https://github.com/hewidow/SpeedCloud-Android/releases/tag/latest)在这里，API的请求地址在[config.xml](https://github.com/hewidow/SpeedCloud-Android/blob/master/app/src/main/res/values/config.xml)中设置。
 
 项目做得比较赶，文件上传和下载无法暂停和断点续传，都只支持单线程。代码写得也很粗糙，基本按怎么方便怎么来。
 
