@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.ForgetFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_selector"
+            android:drawableStart="@drawable/ic_baseline_alternate_email_24"
+            android:drawablePadding="6dp"
+            android:hint="邮箱"
+            android:inputType="textEmailAddress" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="20dp">
+
+            <EditText
+                android:id="@+id/code"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/edit_text_selector"
+                android:drawableStart="@drawable/ic_baseline_verified_user_24"
+                android:drawablePadding="6dp"
+                android:hint="验证码"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/sendCode"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/code"
+                android:text="发送验证码" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_selector"
+            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawablePadding="6dp"
+            android:hint="新密码"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/forget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stateListAnimator="@null"
+            android:text="忘记密码" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.SpeedCloud" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/statusBar</item>
+        <!-- Customize your theme here. -->
+        <!-- 去除Button底部阴影 -->
+        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button.UnelevatedButton
+        </item>
+        <!-- 设置亮色statusBar，使文字变暗 -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <!-- 设置启动背景 -->
+        <item name="android:windowSplashscreenContent" tools:targetApi="o">
+            @drawable/splash_background
+        </item>
+    </style>
+</resources>

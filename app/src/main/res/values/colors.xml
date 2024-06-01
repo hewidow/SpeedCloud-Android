@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2196F3</color>
+    <color name="primary_variant">#1976D2</color>
+    <color name="secondary">#03DAC5</color>
+    <color name="secondary_variant">#018786</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="edit_text_normal">#BDBDBD</color>
+    <color name="edit_text_focus">#2196F3</color>
+    <color name="water_ripple_primary">#2196F3</color>
+    <color name="water_ripple_secondary">#90CAF9</color>
+    <color name="statusBar">#FFFFFF</color>
+    <color name="background_primary">#FFFFFF</color>
+    <color name="background_secondary">#F5F5F5</color>
+    <color name="background_tertiary">#424242</color>
+    <color name="btn_secondary">#BDBDBD</color>
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#9E9E9E</color>
+    <color name="icon_primary">#424242</color>
+    <color name="icon_secondary">#BDBDBD</color>
+    <color name="icon_folder">#FFC107</color>
+    <color name="icon_video">#03A9F4</color>
+    <color name="icon_image">#4CAF50</color>
+    <color name="icon_file">#676767</color>
+    <color name="row_item_pressed">#BFEEEEEE</color>
+    <color name="row_item_selected">#4090CAF9</color>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/background_primary" />
+            <corners android:radius="6dp" />
+            <size android:height="56dp" android:width="56dp"/>
+        </shape>
+    </item>
+    <item
+        android:drawable="@drawable/ic_baseline_file_copy_24"
+        android:bottom="10dp"
+        android:top="10dp"
+        android:left="10dp"
+        android:right="10dp">
+    </item>
+</layer-list>
